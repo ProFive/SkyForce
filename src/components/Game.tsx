@@ -120,7 +120,6 @@ export const Game = () => {
       <div
         ref={boardRef}
         className={`board${phase === 'playing' ? ' playing' : ''}`}
-        style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}
       >
         {/* Live camera fills the board as the playing-screen background */}
         <video ref={videoRef} className="cam-bg" muted playsInline />
