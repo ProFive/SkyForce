@@ -39,17 +39,35 @@ export const useGameLoop = ({
       (window as unknown as { __world: GameWorld }).__world = world;
     }
 
+    // Fixed simulation timestep: the sim always advances at 60 Hz no matter the
+    // monitor refresh rate, so gameplay speed is identical on 60/120/144 Hz.
+    const STEP_MS = 1000 / 60;
+    const MAX_STEPS = 5; // clamp catch-up after a stall to avoid a spiral
+
     let rafId = 0;
     let running = false;
     let frame = 0;
     let fpsLast = performance.now();
     let fpsFrames = 0;
+    let lastTime = performance.now();
+    let acc = 0;
 
     const tick = () => {
+      const now = performance.now();
+      let delta = now - lastTime;
+      lastTime = now;
+      if (delta > 250) delta = 250; // tab was backgrounded; don't fast-forward
+      acc += delta;
+
       const ctx = canvasRef.current?.getContext('2d');
       const hand = handPositionRef.current;
 
-      world.update(hand);
+      let steps = 0;
+      while (acc >= STEP_MS && steps < MAX_STEPS) {
+        world.update(hand);
+        acc -= STEP_MS;
+        steps++;
+      }
       if (ctx) render(ctx, world);
 
       // Throttle HUD writes to avoid frequent React re-renders.
@@ -73,7 +91,6 @@ export const useGameLoop = ({
           store.setPowerUps({ rapid, spread, shield });
         }
       }
-      const now = performance.now();
       if (now - fpsLast >= 1000) {
         store.setFps(Math.round((fpsFrames * 1000) / (now - fpsLast)));
         fpsLast = now;
@@ -91,6 +108,8 @@ export const useGameLoop = ({
       frame = 0;
       fpsLast = performance.now();
       fpsFrames = 0;
+      lastTime = performance.now();
+      acc = 0;
       rafId = requestAnimationFrame(tick);
     };
 

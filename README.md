@@ -10,6 +10,15 @@ npm install
 npm run dev
 ```
 
+## Develop
+
+```bash
+npm test        # vitest unit suite (game logic, calibration, high scores)
+npm run build   # type-check + production build
+```
+
+CI runs the build + tests on every push and PR.
+
 Open the local URL, click **Start**, allow camera access, and move your index
 finger to fly. Your ship fires automatically — destroy the enemies and don't let
 them slip past.
@@ -31,7 +40,9 @@ them slip past.
 The simulation is **decoupled from React**. A single `requestAnimationFrame`
 loop owns all entity state and renders straight to canvas; only throttled HUD
 values (score, lives, fps) flow into React. This keeps the game at ~60fps
-without per-frame re-renders.
+without per-frame re-renders. The loop uses a **fixed timestep** (accumulator),
+so gameplay speed is identical on 60/120/144 Hz displays. MediaPipe is
+**code-split** into its own chunk so the UI paints before it finishes loading.
 
 | Path | Role |
 |------|------|

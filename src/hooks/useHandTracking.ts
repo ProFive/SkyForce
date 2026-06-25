@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { HandLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
+import type { HandLandmarker } from '@mediapipe/tasks-vision';
 import * as calibration from '../engine/calibration';
 import type { HandPosition } from '../types';
 
@@ -34,7 +34,10 @@ export const useHandTracking = () => {
 
     const init = async () => {
       try {
-        // 1. Load MediaPipe hand landmarker.
+        // 1. Load MediaPipe hand landmarker (code-split into its own chunk).
+        const { HandLandmarker, FilesetResolver } = await import(
+          '@mediapipe/tasks-vision'
+        );
         const vision = await FilesetResolver.forVisionTasks(WASM_BASE_PATH);
         const landmarker = await HandLandmarker.createFromOptions(vision, {
           baseOptions: { modelAssetPath: MODEL_PATH, delegate: 'GPU' },
