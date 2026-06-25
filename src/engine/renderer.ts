@@ -1,52 +1,6 @@
 import type { GameWorld } from './gameWorld';
 import type { PowerUpType } from '../types';
 
-// Persistent starfield — generated once, scrolls with the frame counter.
-interface Star {
-  x: number;
-  y: number;
-  speed: number;
-  size: number;
-}
-
-let stars: Star[] = [];
-let starsW = 0;
-let starsH = 0;
-
-function ensureStars(width: number, height: number) {
-  if (stars.length && starsW === width && starsH === height) return;
-  starsW = width;
-  starsH = height;
-  stars = Array.from({ length: 90 }, () => ({
-    x: Math.random() * width,
-    y: Math.random() * height,
-    speed: 0.4 + Math.random() * 1.6,
-    size: Math.random() < 0.85 ? 1 : 2,
-  }));
-}
-
-function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: number) {
-  const grad = ctx.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, '#05060f');
-  grad.addColorStop(0.6, '#0a0f24');
-  grad.addColorStop(1, '#10183a');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, w, h);
-
-  ensureStars(w, h);
-  ctx.fillStyle = '#9fb4ff';
-  for (const s of stars) {
-    s.y += s.speed;
-    if (s.y > h) {
-      s.y = 0;
-      s.x = Math.random() * w;
-    }
-    ctx.globalAlpha = s.size === 2 ? 0.9 : 0.55;
-    ctx.fillRect(s.x, s.y, s.size, s.size);
-  }
-  ctx.globalAlpha = 1;
-}
-
 function drawPlayer(ctx: CanvasRenderingContext2D, world: GameWorld) {
   const p = world.player;
   const cx = p.position.x + p.width / 2;
@@ -318,8 +272,8 @@ function drawBanner(ctx: CanvasRenderingContext2D, world: GameWorld) {
 
 /** Render one full frame of the world to the canvas. */
 export function render(ctx: CanvasRenderingContext2D, world: GameWorld) {
-  // Background fills the full canvas unshaken so no edge gaps appear.
-  drawBackground(ctx, world.width, world.height);
+  // Transparent canvas: the camera feed shows through from behind.
+  ctx.clearRect(0, 0, world.width, world.height);
 
   ctx.save();
   // Screen shake applies only to the gameplay layer.

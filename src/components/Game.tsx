@@ -122,6 +122,10 @@ export const Game = () => {
         className={`board${phase === 'playing' ? ' playing' : ''}`}
         style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}
       >
+        {/* Live camera fills the board as the playing-screen background */}
+        <video ref={videoRef} className="cam-bg" muted playsInline />
+        <div className="cam-scrim" aria-hidden="true" />
+
         <GameCanvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
 
         {/* Live HUD */}
@@ -154,9 +158,6 @@ export const Game = () => {
             )}
           </div>
         )}
-
-        {/* Camera preview thumbnail (mirrored) */}
-        <video ref={videoRef} className="cam-preview" muted playsInline />
 
         {/* Calibration overlay */}
         {phase === 'calibrating' && (
