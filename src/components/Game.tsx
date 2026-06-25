@@ -155,15 +155,6 @@ export const Game = () => {
           </div>
         )}
 
-        {/* Mute toggle */}
-        <button
-          className="mute-btn"
-          onClick={onToggleMute}
-          title={muted ? 'Unmute' : 'Mute'}
-        >
-          {muted ? '🔇' : '🔊'}
-        </button>
-
         {/* Camera preview thumbnail (mirrored) */}
         <video ref={videoRef} className="cam-preview" muted playsInline />
 
@@ -217,6 +208,13 @@ export const Game = () => {
                   )}
                   {isLoading && <p className="status">Loading camera & model…</p>}
                   {error && <p className="status err">⚠ {error}</p>}
+                  <button
+                    className="sound-toggle"
+                    onClick={onToggleMute}
+                    aria-pressed={!muted}
+                  >
+                    {muted ? '🔇 Sound off' : '🔊 Sound on'}
+                  </button>
                   <div className="btn-row">
                     <button className="play-btn" onClick={start} disabled={ctrlsDisabled}>
                       {isLoading ? 'Loading…' : 'Start'}
