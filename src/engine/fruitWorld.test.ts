@@ -30,9 +30,9 @@ function fruit(over: Partial<Fruit> = {}): Fruit {
 }
 
 describe('FruitWorld', () => {
-  it('starts with 3 lives, no score, not over', () => {
+  it('starts with 10 lives, no score, not over', () => {
     const w = new FruitWorld(W, H);
-    expect(w.lives).toBe(3);
+    expect(w.lives).toBe(10);
     expect(w.score).toBe(0);
     expect(w.gameOver).toBe(false);
   });
@@ -62,14 +62,14 @@ describe('FruitWorld', () => {
     // A fruit already below the bottom, moving down -> a miss.
     w.fruits = [fruit({ x: 50, y: H + 40, vy: 4 })];
     w.update(NO_HAND);
-    expect(w.lives).toBe(2);
+    expect(w.lives).toBe(9);
   });
 
   it('does not penalize a dodged bomb that falls off', () => {
     const w = new FruitWorld(W, H);
     w.fruits = [fruit({ bomb: true, x: 50, y: H + 40, vy: 4 })];
     w.update(NO_HAND);
-    expect(w.lives).toBe(3);
+    expect(w.lives).toBe(10);
     expect(w.gameOver).toBe(false);
   });
 

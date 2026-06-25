@@ -2,7 +2,7 @@ import type { GameInstance, HandPosition, HudState, SfxName } from '../types';
 import { drawFruit } from './fruitRenderer';
 
 const GRAVITY = 0.34;
-const LIVES = 3;
+const LIVES = 10;
 const COMBO_WINDOW = 22; // frames to chain slices into a combo
 const TRAIL_LIFE = 12; // frames a blade-trail point lingers
 
