@@ -54,6 +54,7 @@ export class GameWorld {
 
   player!: Player;
   bullets: Bullet[] = [];
+  enemyBullets: Bullet[] = [];
   enemies: Enemy[] = [];
   powerUps: PowerUp[] = [];
   particles: Particle[] = [];
@@ -98,6 +99,7 @@ export class GameWorld {
       shieldTimer: 0,
     };
     this.bullets = [];
+    this.enemyBullets = [];
     this.enemies = [];
     this.powerUps = [];
     this.particles = [];
@@ -156,6 +158,7 @@ export class GameWorld {
       maxHealth: health,
       hitFlash: 0,
       isBoss: false,
+      fireTimer: 0,
     });
   }
 
@@ -173,7 +176,33 @@ export class GameWorld {
       maxHealth: health,
       hitFlash: 0,
       isBoss: true,
+      fireTimer: 90,
     });
+  }
+
+  private bossFire(boss: Enemy) {
+    const cx = boss.position.x + boss.width / 2;
+    const cy = boss.position.y + boss.height;
+    const px = this.player.position.x + this.player.width / 2;
+    const py = this.player.position.y + this.player.height / 2;
+    // Aim at the player, then fan out a spread that widens with level.
+    const aim = Math.atan2(py - cy, px - cx);
+    const speed = 4 + this.level * 0.12;
+    const shots = 3 + Math.floor(this.level / BOSS_EVERY); // more shots deeper in
+    const spread = 0.5; // radians, total fan
+    for (let i = 0; i < shots; i++) {
+      const t = shots === 1 ? 0 : i / (shots - 1) - 0.5;
+      const angle = aim + t * spread;
+      this.enemyBullets.push({
+        id: this.nextId++,
+        position: { x: cx - 5, y: cy },
+        velocity: { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed },
+        width: 10,
+        height: 10,
+        damage: 1,
+      });
+    }
+    this.onSfx?.('hit');
   }
 
   private dropPowerUp(x: number, y: number, guaranteed = false) {
@@ -339,9 +368,30 @@ export class GameWorld {
         }
         // Bosses hover in the upper area rather than diving past the player.
         if (e.position.y > this.height * 0.22) e.position.y = this.height * 0.22;
+        // Fire once fully on screen.
+        if (e.position.y >= 0) {
+          if (e.fireTimer > 0) e.fireTimer--;
+          else {
+            this.bossFire(e);
+            e.fireTimer = Math.max(38, 78 - this.level * 2);
+          }
+        }
       }
       if (e.hitFlash > 0) e.hitFlash--;
     }
+
+    // --- Move enemy bullets ---
+    for (const eb of this.enemyBullets) {
+      eb.position.x += eb.velocity.x;
+      eb.position.y += eb.velocity.y;
+    }
+    this.enemyBullets = this.enemyBullets.filter(
+      (eb) =>
+        eb.position.y < this.height + 20 &&
+        eb.position.y + eb.height > -20 &&
+        eb.position.x > -20 &&
+        eb.position.x < this.width + 20
+    );
 
     // --- Move power-ups & particles & popups ---
     for (const pu of this.powerUps) pu.position.y += pu.velocity.y;
@@ -416,6 +466,20 @@ export class GameWorld {
     // --- Enemy reaches player or escapes ---
     let livesLost = 0;
     const shielded = p.shieldTimer > 0;
+
+    // Boss bullets hitting the player.
+    this.enemyBullets = this.enemyBullets.filter((eb) => {
+      if (!aabb(eb, p)) return true;
+      this.emitExplosion(
+        eb.position.x + eb.width / 2,
+        eb.position.y + eb.height / 2,
+        shielded ? '#5cd2ff' : '#ff5d7a',
+        8
+      );
+      if (!shielded) livesLost++;
+      return false;
+    });
+
     for (const e of this.enemies) {
       if (deadEnemies.has(e.id)) continue;
       if (!e.isBoss && aabb(e, p)) {

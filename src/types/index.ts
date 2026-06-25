@@ -30,6 +30,7 @@ export interface Enemy extends Entity {
   maxHealth: number;
   hitFlash: number; // frames of white-flash after being hit
   isBoss: boolean;
+  fireTimer: number; // frames until next shot (bosses only)
 }
 
 export type PowerUpType = 'spread' | 'rapid' | 'shield' | 'life';

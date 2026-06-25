@@ -117,6 +117,25 @@ function drawBullets(ctx: CanvasRenderingContext2D, world: GameWorld) {
   ctx.restore();
 }
 
+function drawEnemyBullets(ctx: CanvasRenderingContext2D, world: GameWorld) {
+  ctx.save();
+  ctx.shadowColor = '#ff4fa0';
+  ctx.shadowBlur = 10;
+  ctx.fillStyle = '#ff77c0';
+  for (const b of world.enemyBullets) {
+    ctx.beginPath();
+    ctx.arc(
+      b.position.x + b.width / 2,
+      b.position.y + b.height / 2,
+      b.width / 2,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 function drawEnemies(ctx: CanvasRenderingContext2D, world: GameWorld) {
   for (const e of world.enemies) {
     if (e.isBoss) {
@@ -289,6 +308,7 @@ export function render(ctx: CanvasRenderingContext2D, world: GameWorld) {
   drawParticles(ctx, world);
   drawPowerUps(ctx, world);
   drawBullets(ctx, world);
+  drawEnemyBullets(ctx, world);
   drawEnemies(ctx, world);
   drawPlayer(ctx, world);
   drawPopups(ctx, world);

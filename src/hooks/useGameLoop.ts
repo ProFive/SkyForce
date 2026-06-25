@@ -34,6 +34,11 @@ export const useGameLoop = ({
     world.onSfx = (name) => audio.play(name);
     worldRef.current = world;
 
+    // Dev-only debug handle (stripped from production builds).
+    if (import.meta.env.DEV) {
+      (window as unknown as { __world: GameWorld }).__world = world;
+    }
+
     let rafId = 0;
     let running = false;
     let frame = 0;
