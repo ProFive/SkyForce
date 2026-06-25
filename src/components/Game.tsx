@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useHandTracking } from '../hooks/useHandTracking';
 import { useGameLoop } from '../hooks/useGameLoop';
+import {
+  useFingerCursor,
+  RING_CIRCUMFERENCE,
+} from '../hooks/useFingerCursor';
 import { useGameStore } from '../store/gameStore';
 import { audio } from '../engine/audio';
 import * as calibration from '../engine/calibration';
@@ -19,6 +23,9 @@ const POWERUP_LABEL: Record<'rapid' | 'spread' | 'shield', string> = {
 
 export const Game = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<SVGCircleElement>(null);
   const { videoRef, handPositionRef, isLoading, error } = useHandTracking();
 
   useGameLoop({
@@ -87,6 +94,16 @@ export const Game = () => {
     audio.setMuted(next);
   };
 
+  // Let the finger drive the menu buttons on the start / game-over overlays.
+  const cursorActive = phase === 'idle' || phase === 'gameover';
+  useFingerCursor({
+    active: cursorActive,
+    handPositionRef,
+    boardRef,
+    cursorRef,
+    ringRef,
+  });
+
   const activePowerUps = (['spread', 'rapid', 'shield'] as const).filter(
     (k) => powerUps[k] > 0
   );
@@ -100,7 +117,11 @@ export const Game = () => {
         <span className="subtitle">finger-controlled flight</span>
       </div>
 
-      <div className="board" style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}>
+      <div
+        ref={boardRef}
+        className={`board${phase === 'playing' ? ' playing' : ''}`}
+        style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}
+      >
         <GameCanvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
 
         {/* Live HUD */}
@@ -208,11 +229,31 @@ export const Game = () => {
                       Calibrate
                     </button>
                   </div>
+                  <p className="cursor-hint">
+                    👆 Or hover a button with your finger to select it
+                  </p>
                 </>
               )}
             </div>
           </div>
         )}
+
+        {/* Finger pointer for hands-free menu control (hover to click) */}
+        <div ref={cursorRef} className="finger-cursor" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48">
+            <circle className="fc-track" cx="24" cy="24" r="20" />
+            <circle
+              ref={ringRef}
+              className="fc-ring"
+              cx="24"
+              cy="24"
+              r="20"
+              strokeDasharray={RING_CIRCUMFERENCE}
+              strokeDashoffset={RING_CIRCUMFERENCE}
+            />
+          </svg>
+          <span className="fc-dot" />
+        </div>
       </div>
     </div>
   );

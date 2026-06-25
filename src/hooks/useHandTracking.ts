@@ -77,6 +77,23 @@ export const useHandTracking = () => {
     };
 
     const detectLoop = () => {
+      // Dev-only manual override for deterministic testing of finger-driven UI.
+      if (import.meta.env.DEV) {
+        const ovr = (
+          window as unknown as { __handOverride?: { x: number; y: number } | null }
+        ).__handOverride;
+        if (ovr) {
+          handPositionRef.current = {
+            x: ovr.x,
+            y: ovr.y,
+            confidence: 1,
+            available: true,
+          };
+          rafRef.current = requestAnimationFrame(detectLoop);
+          return;
+        }
+      }
+
       const video = videoRef.current;
       const landmarker = handLandmarkerRef.current;
 

@@ -166,6 +166,73 @@
   background: #000;
 }
 
+.cursor-hint {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: #6f7bb0;
+}
+
+/* ---------- Hide the OS cursor during play (keep it on the mute button) ---------- */
+.board.playing {
+  cursor: none;
+}
+
+.board.playing .mute-btn {
+  cursor: pointer;
+}
+
+/* ---------- Finger pointer (hands-free menu control) ---------- */
+.finger-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 50;
+  transition: opacity 0.15s ease;
+  will-change: transform;
+}
+
+.finger-cursor svg {
+  display: block;
+  transform: rotate(-90deg); /* ring fills clockwise from the top */
+}
+
+.fc-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 3;
+}
+
+.fc-ring {
+  fill: none;
+  stroke: #3affd0;
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(58, 255, 208, 0.7));
+  transition: stroke-dashoffset 0.05s linear;
+}
+
+.fc-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #3affd0;
+  box-shadow: 0 0 10px rgba(58, 255, 208, 0.9);
+  transition: background 0.1s ease, transform 0.1s ease;
+}
+
+.finger-cursor.over .fc-dot {
+  background: #ffffff;
+  transform: translate(-50%, -50%) scale(1.25);
+}
+
 /* ---------- Mute button ---------- */
 .mute-btn {
   position: absolute;
