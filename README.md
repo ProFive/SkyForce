@@ -1,7 +1,18 @@
-# Sky Force — Finger-Controlled Shooter
+# Hand Arcade — Finger-Controlled Games
 
-A web "Sky Force"-style airplane shooter you control with your **index finger**
-in front of the webcam. Hand tracking runs fully client-side via MediaPipe.
+A web arcade you play with your **index finger** in front of the webcam. Hand
+tracking runs fully client-side via MediaPipe; the live camera is the game
+background. Pick a game from the menu (the finger cursor works there too).
+
+Games:
+- **Sky Force** — a vertical shooter: fly your auto-firing ship, grab power-ups,
+  clear waves, and beat a boss every 5 levels.
+- **Fruit Slash** — swipe to slice flying fruit for combos; avoid the bombs and
+  don't let fruit fall.
+
+New games are pluggable: implement the `GameInstance` contract and register a
+`GameModule` in `src/games/registry.ts`; the shell handles camera, hand
+tracking, the finger cursor, calibration, audio, HUD, and high scores.
 
 ## Play
 

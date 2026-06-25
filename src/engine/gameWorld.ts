@@ -8,7 +8,10 @@ import type {
   ScorePopup,
   HandPosition,
   SfxName,
+  GameInstance,
+  HudState,
 } from '../types';
+import { render as drawWorld } from './renderer';
 
 const PLAYER_W = 44;
 const PLAYER_H = 48;
@@ -49,7 +52,7 @@ function clamp(v: number, min: number, max: number): number {
  * Holds the entire mutable game state and advances it one frame at a time.
  * Rendering and React read from the public fields; nothing here touches the DOM.
  */
-export class GameWorld {
+export class GameWorld implements GameInstance {
   width: number;
   height: number;
 
@@ -526,5 +529,28 @@ export class GameWorld {
     }
 
     this.onScore?.(this.score);
+  }
+
+  render(ctx: CanvasRenderingContext2D) {
+    drawWorld(ctx, this);
+  }
+
+  hud(): HudState {
+    const p = this.player;
+    const secs = (frames: number) => Math.ceil(frames / 60);
+    const badges: HudState['badges'] = [];
+    if (p.spreadTimer > 0)
+      badges.push({ key: 'spread', label: `W ${secs(p.spreadTimer)}s`, color: '#7dff9b' });
+    if (p.rapidTimer > 0)
+      badges.push({ key: 'rapid', label: `R ${secs(p.rapidTimer)}s`, color: '#ffd25e' });
+    if (p.shieldTimer > 0)
+      badges.push({ key: 'shield', label: `S ${secs(p.shieldTimer)}s`, color: '#5cd2ff' });
+    return {
+      score: this.score,
+      lives: Math.max(0, this.lives),
+      maxLives: MAX_LIVES,
+      level: this.level,
+      badges,
+    };
   }
 }

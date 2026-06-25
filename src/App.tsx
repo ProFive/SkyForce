@@ -1,8 +1,8 @@
-import { Game } from './components/Game'
+import { Arcade } from './components/Arcade'
 import './App.css'
 
 function App() {
-  return <Game />
+  return <Arcade />
 }
 
 export default App

@@ -1,23 +1,19 @@
 export interface HighScore {
   score: number;
-  level: number;
   date: number; // epoch ms
 }
 
-const KEY = 'skyforce.highscores';
 const MAX = 5;
+const keyFor = (gameId: string) => `arcade.scores.${gameId}`;
 
-export function loadHighScores(): HighScore[] {
+export function loadHighScores(gameId: string): HighScore[] {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(keyFor(gameId));
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
     return parsed
-      .filter(
-        (e): e is HighScore =>
-          e && typeof e.score === 'number' && typeof e.level === 'number'
-      )
+      .filter((e): e is HighScore => e && typeof e.score === 'number')
       .sort((a, b) => b.score - a.score)
       .slice(0, MAX);
   } catch {
@@ -26,21 +22,25 @@ export function loadHighScores(): HighScore[] {
 }
 
 /**
- * Record a finished run. Returns the updated top-5 list plus the 0-based rank
- * of the new entry within that list, or -1 if it didn't make the cut.
+ * Record a finished run for a game. Returns the updated top-5 list plus the
+ * 0-based rank of the new entry within it, or -1 if it didn't make the cut.
  */
 export function addHighScore(
-  score: number,
-  level: number
+  gameId: string,
+  score: number
 ): { scores: HighScore[]; rank: number } {
-  const entry: HighScore = { score, level, date: Date.now() };
-  const all = [...loadHighScores(), entry].sort((a, b) => b.score - a.score);
+  const entry: HighScore = { score, date: Date.now() };
+  const all = [...loadHighScores(gameId), entry].sort((a, b) => b.score - a.score);
   const scores = all.slice(0, MAX);
   try {
-    localStorage.setItem(KEY, JSON.stringify(scores));
+    localStorage.setItem(keyFor(gameId), JSON.stringify(scores));
   } catch {
     /* ignore storage failures (private mode, quota) */
   }
-  const rank = scores.indexOf(entry);
-  return { scores, rank };
+  return { scores, rank: scores.indexOf(entry) };
+}
+
+/** Best score for a game, or 0 if none yet — used on the menu cards. */
+export function bestScore(gameId: string): number {
+  return loadHighScores(gameId)[0]?.score ?? 0;
 }

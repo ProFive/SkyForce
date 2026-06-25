@@ -74,3 +74,45 @@ export interface HandPosition {
   confidence: number;
   available: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// Arcade contracts — shared across every game so one shell can host them all.
+// ---------------------------------------------------------------------------
+
+/** Generic HUD data a game exposes each frame for the shared HUD to render. */
+export interface HudState {
+  score: number;
+  lives?: number;
+  maxLives?: number;
+  level?: number;
+  badges?: { key: string; label: string; color: string }[];
+}
+
+/**
+ * A running game. The arcade loop drives `update`/`render` at a fixed timestep
+ * and polls `hud()`; nothing here touches the DOM or React.
+ */
+export interface GameInstance {
+  readonly width: number;
+  readonly height: number;
+  readonly score: number;
+  readonly gameOver: boolean;
+  onGameOver?: () => void;
+  onSfx?: (name: SfxName) => void;
+  reset(): void;
+  update(hand: HandPosition): void;
+  render(ctx: CanvasRenderingContext2D): void;
+  hud(): HudState;
+}
+
+/** Static metadata + factory describing a game in the arcade menu. */
+export interface GameModule {
+  id: string;
+  title: string;
+  icon: string; // emoji shown on the menu card
+  tagline: string; // short menu subtitle
+  accent: string; // theme color (hex)
+  howTo: string; // ready-screen instructions
+  legend?: { symbol: string; color: string; text: string }[];
+  create(width: number, height: number): GameInstance;
+}
