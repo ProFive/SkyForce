@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { HandLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
+import * as calibration from '../engine/calibration';
 import type { HandPosition } from '../types';
 
 const WASM_BASE_PATH =
@@ -82,9 +83,13 @@ export const useHandTracking = () => {
           // Index-finger tip is landmark 8.
           const tip = result.landmarks[0][8];
           // Mirror X so moving your hand right moves the ship right.
+          const rawX = 1 - tip.x;
+          const rawY = tip.y;
+          calibration.observe(rawX, rawY); // grows the box while calibrating
+          const mapped = calibration.apply(rawX, rawY);
           handPositionRef.current = {
-            x: 1 - tip.x,
-            y: tip.y,
+            x: mapped.x,
+            y: mapped.y,
             confidence: 1,
             available: true,
           };

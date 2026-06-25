@@ -211,6 +211,28 @@ function drawBoss(
   ctx.fill();
   ctx.restore();
 
+  // Telegraph: aim line + warning while the boss winds up a shot.
+  if (e.telegraph) {
+    const px = world.player.position.x + world.player.width / 2;
+    const py = world.player.position.y + world.player.height / 2;
+    const pulse = 0.35 + 0.45 * Math.abs(Math.sin(Date.now() / 70));
+    ctx.save();
+    ctx.globalAlpha = pulse;
+    ctx.strokeStyle = '#ff4d6d';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([7, 7]);
+    ctx.beginPath();
+    ctx.moveTo(cx, bottom);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#ff4d6d';
+    ctx.font = 'bold 24px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('!', cx, top - 8);
+    ctx.restore();
+  }
+
   // Full-width boss health bar at the very top of the play area.
   const pad = 14;
   const barW = world.width - pad * 2;

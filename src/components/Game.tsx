@@ -1,12 +1,15 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useHandTracking } from '../hooks/useHandTracking';
 import { useGameLoop } from '../hooks/useGameLoop';
 import { useGameStore } from '../store/gameStore';
 import { audio } from '../engine/audio';
+import * as calibration from '../engine/calibration';
+import { addHighScore, loadHighScores, type HighScore } from '../store/highScores';
 import { GameCanvas } from './GameCanvas';
 
 const CANVAS_WIDTH = 480;
 const CANVAS_HEIGHT = 720;
+const CALIBRATION_SECONDS = 5;
 
 const POWERUP_LABEL: Record<'rapid' | 'spread' | 'shield', string> = {
   rapid: 'R',
@@ -34,7 +37,49 @@ export const Game = () => {
   const muted = useGameStore((s) => s.muted);
   const powerUps = useGameStore((s) => s.powerUps);
   const start = useGameStore((s) => s.start);
+  const calibrate = useGameStore((s) => s.calibrate);
+  const reset = useGameStore((s) => s.reset);
   const toggleMute = useGameStore((s) => s.toggleMute);
+
+  const [board, setBoard] = useState<{ scores: HighScore[]; rank: number }>({
+    scores: [],
+    rank: -1,
+  });
+  const [calibCountdown, setCalibCountdown] = useState(0);
+
+  // Record a high score exactly once per game-over transition.
+  const submittedRef = useRef(false);
+  useEffect(() => {
+    if (phase === 'gameover') {
+      if (!submittedRef.current) {
+        submittedRef.current = true;
+        setBoard(addHighScore(score, level));
+      }
+    } else {
+      submittedRef.current = false;
+    }
+  }, [phase, score, level]);
+
+  // Calibration: record the finger's range for a few seconds, then save.
+  useEffect(() => {
+    if (phase !== 'calibrating') return;
+    calibration.beginRecording();
+    let remaining = CALIBRATION_SECONDS;
+    setCalibCountdown(remaining);
+    const id = setInterval(() => {
+      remaining -= 1;
+      setCalibCountdown(remaining);
+      if (remaining <= 0) {
+        clearInterval(id);
+        calibration.finishRecording();
+        reset();
+      }
+    }, 1000);
+    return () => {
+      clearInterval(id);
+      calibration.finishRecording();
+    };
+  }, [phase, reset]);
 
   const onToggleMute = () => {
     const next = !muted;
@@ -45,6 +90,8 @@ export const Game = () => {
   const activePowerUps = (['spread', 'rapid', 'shield'] as const).filter(
     (k) => powerUps[k] > 0
   );
+  const ctrlsDisabled = isLoading || !!error;
+  const bestScores = phase === 'gameover' ? board.scores : loadHighScores();
 
   return (
     <div className="stage">
@@ -99,8 +146,25 @@ export const Game = () => {
         {/* Camera preview thumbnail (mirrored) */}
         <video ref={videoRef} className="cam-preview" muted playsInline />
 
-        {/* Overlays */}
-        {phase !== 'playing' && (
+        {/* Calibration overlay */}
+        {phase === 'calibrating' && (
+          <div className="overlay">
+            <div className="panel">
+              <h2>Calibrate</h2>
+              <p className="how-to">
+                Move your index finger to trace the rectangle you want to play
+                in — reach the corners you're comfortable with.
+              </p>
+              <div className="countdown">{calibCountdown}</div>
+              <button className="play-btn ghost" onClick={reset}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Start / Game Over overlays */}
+        {(phase === 'idle' || phase === 'gameover') && (
           <div className="overlay">
             <div className="panel">
               {phase === 'gameover' ? (
@@ -108,7 +172,8 @@ export const Game = () => {
                   <h2>Game Over</h2>
                   <p className="final-score">Score {score.toLocaleString()}</p>
                   <p className="final-level">Reached level {level}</p>
-                  <button className="play-btn" onClick={start} disabled={isLoading || !!error}>
+                  <HighScoreList scores={bestScores} rank={board.rank} />
+                  <button className="play-btn" onClick={start} disabled={ctrlsDisabled}>
                     Play Again
                   </button>
                 </>
@@ -126,11 +191,23 @@ export const Game = () => {
                     <span className="pill pill-shield">S</span> shield
                     <span className="pill pill-life">+</span> life
                   </div>
+                  {bestScores.length > 0 && (
+                    <HighScoreList scores={bestScores} rank={-1} />
+                  )}
                   {isLoading && <p className="status">Loading camera & model…</p>}
                   {error && <p className="status err">⚠ {error}</p>}
-                  <button className="play-btn" onClick={start} disabled={isLoading || !!error}>
-                    {isLoading ? 'Loading…' : 'Start'}
-                  </button>
+                  <div className="btn-row">
+                    <button className="play-btn" onClick={start} disabled={ctrlsDisabled}>
+                      {isLoading ? 'Loading…' : 'Start'}
+                    </button>
+                    <button
+                      className="play-btn ghost"
+                      onClick={calibrate}
+                      disabled={ctrlsDisabled}
+                    >
+                      Calibrate
+                    </button>
+                  </div>
                 </>
               )}
             </div>
@@ -140,3 +217,24 @@ export const Game = () => {
     </div>
   );
 };
+
+function HighScoreList({
+  scores,
+  rank,
+}: {
+  scores: HighScore[];
+  rank: number;
+}) {
+  if (scores.length === 0) return null;
+  return (
+    <ol className="scores">
+      {scores.map((s, i) => (
+        <li key={s.date} className={i === rank ? 'scores-new' : undefined}>
+          <span className="scores-rank">{i + 1}</span>
+          <span className="scores-pts">{s.score.toLocaleString()}</span>
+          <span className="scores-lv">LV {s.level}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}

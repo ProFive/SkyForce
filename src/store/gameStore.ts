@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type GamePhase = 'idle' | 'playing' | 'gameover';
+export type GamePhase = 'idle' | 'calibrating' | 'playing' | 'gameover';
 
 /** Seconds remaining on each timed power-up, for the HUD. */
 export interface PowerUpStatus {
@@ -26,6 +26,7 @@ interface GameStore {
   powerUps: PowerUpStatus;
 
   start: () => void;
+  calibrate: () => void;
   setGameOver: () => void;
   reset: () => void;
   setScore: (score: number) => void;
@@ -53,6 +54,7 @@ export const useGameStore = create<GameStore>((set) => ({
 
   start: () =>
     set({ phase: 'playing', score: 0, lives: 3, level: 1, powerUps: NO_POWERUPS }),
+  calibrate: () => set({ phase: 'calibrating' }),
   setGameOver: () => set({ phase: 'gameover' }),
   reset: () => set({ phase: 'idle', score: 0, lives: 3, level: 1 }),
   setScore: (score) => set({ score }),

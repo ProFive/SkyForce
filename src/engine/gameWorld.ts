@@ -20,6 +20,7 @@ const ENEMY_BASE_SPEED = 1.5;
 const SPAWN_INTERVAL = 46; // frames between enemies within a wave
 const MAX_LIVES = 5;
 const BOSS_EVERY = 5; // boss appears on every Nth level
+const TELEGRAPH_FRAMES = 26; // wind-up warning before a boss shot
 
 const POWERUP_DURATIONS: Record<PowerUpType, number> = {
   rapid: 8 * 60,
@@ -159,6 +160,7 @@ export class GameWorld {
       hitFlash: 0,
       isBoss: false,
       fireTimer: 0,
+      telegraph: false,
     });
   }
 
@@ -177,6 +179,7 @@ export class GameWorld {
       hitFlash: 0,
       isBoss: true,
       fireTimer: 90,
+      telegraph: false,
     });
   }
 
@@ -368,13 +371,14 @@ export class GameWorld {
         }
         // Bosses hover in the upper area rather than diving past the player.
         if (e.position.y > this.height * 0.22) e.position.y = this.height * 0.22;
-        // Fire once fully on screen.
+        // Fire once fully on screen, with a brief telegraph wind-up.
         if (e.position.y >= 0) {
           if (e.fireTimer > 0) e.fireTimer--;
           else {
             this.bossFire(e);
             e.fireTimer = Math.max(38, 78 - this.level * 2);
           }
+          e.telegraph = e.fireTimer > 0 && e.fireTimer <= TELEGRAPH_FRAMES;
         }
       }
       if (e.hitFlash > 0) e.hitFlash--;
