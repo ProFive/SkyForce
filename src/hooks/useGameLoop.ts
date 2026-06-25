@@ -1,6 +1,7 @@
 import { useEffect, useRef, type RefObject } from 'react';
 import { GameWorld } from '../engine/gameWorld';
 import { render } from '../engine/renderer';
+import { audio } from '../engine/audio';
 import { useGameStore } from '../store/gameStore';
 import type { HandPosition } from '../types';
 
@@ -10,6 +11,8 @@ interface Options {
   width: number;
   height: number;
 }
+
+const toSeconds = (frames: number) => Math.ceil(frames / 60);
 
 /**
  * Owns the requestAnimationFrame simulation. The loop reads the finger position
@@ -27,6 +30,8 @@ export const useGameLoop = ({
   useEffect(() => {
     const world = new GameWorld(width, height);
     world.onGameOver = () => useGameStore.getState().setGameOver();
+    world.onLevel = (lvl) => useGameStore.getState().setLevel(lvl);
+    world.onSfx = (name) => audio.play(name);
     worldRef.current = world;
 
     let rafId = 0;
@@ -54,6 +59,14 @@ export const useGameLoop = ({
         if (store.handTracked !== hand.available) {
           store.setHandTracked(hand.available);
         }
+        const p = world.player;
+        const rapid = toSeconds(p.rapidTimer);
+        const spread = toSeconds(p.spreadTimer);
+        const shield = toSeconds(p.shieldTimer);
+        const cur = store.powerUps;
+        if (cur.rapid !== rapid || cur.spread !== spread || cur.shield !== shield) {
+          store.setPowerUps({ rapid, spread, shield });
+        }
       }
       const now = performance.now();
       if (now - fpsLast >= 1000) {
@@ -67,6 +80,7 @@ export const useGameLoop = ({
 
     const start = () => {
       if (running) return;
+      audio.resume(); // Start button is the user gesture that unlocks audio.
       world.reset();
       running = true;
       frame = 0;
@@ -87,7 +101,6 @@ export const useGameLoop = ({
       else stop();
     });
 
-    // If we mounted already in the playing phase, kick it off.
     if (useGameStore.getState().phase === 'playing') start();
 
     return () => {
