@@ -1,0 +1,203 @@
+.stage {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px 0 40px;
+  background:
+    radial-gradient(circle at 50% 0%, #1b2a5e 0%, #070914 55%, #04050c 100%);
+}
+
+.title-bar {
+  text-align: center;
+  user-select: none;
+}
+
+.title-bar h1 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: #3affd0;
+  text-shadow:
+    0 0 12px rgba(58, 255, 208, 0.7),
+    0 0 30px rgba(58, 255, 208, 0.35);
+}
+
+.subtitle {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #6f7bb0;
+}
+
+/* The play area — canvas plus overlays, positioned together. */
+.board {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(120, 160, 255, 0.25),
+    0 0 40px rgba(40, 80, 200, 0.35),
+    0 18px 60px rgba(0, 0, 0, 0.6);
+}
+
+.game-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- HUD ---------- */
+.hud {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-score {
+  font-size: 30px;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(120, 200, 255, 0.7);
+}
+
+.hud-row {
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hud-lives {
+  font-size: 18px;
+  color: #ff5d7a;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(255, 93, 122, 0.6);
+}
+
+.hud-lives-empty {
+  color: rgba(255, 255, 255, 0.25);
+  text-shadow: none;
+}
+
+.hud-fps {
+  font-size: 12px;
+  color: #6f7bb0;
+}
+
+.hud-warn {
+  margin-top: 8px;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 196, 0, 0.15);
+  color: #ffd25e;
+  font-size: 13px;
+}
+
+/* ---------- Camera preview ---------- */
+.cam-preview {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 132px;
+  height: 99px;
+  object-fit: cover;
+  border-radius: 8px;
+  transform: scaleX(-1); /* mirror so it matches your real movement */
+  opacity: 0.85;
+  border: 1px solid rgba(120, 160, 255, 0.4);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+  background: #000;
+}
+
+/* ---------- Overlays (start / game over) ---------- */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 6, 14, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.panel {
+  width: 80%;
+  max-width: 360px;
+  text-align: center;
+  padding: 28px 24px;
+  border-radius: 16px;
+  background: rgba(16, 22, 48, 0.9);
+  border: 1px solid rgba(120, 160, 255, 0.3);
+  box-shadow: 0 0 40px rgba(40, 80, 200, 0.3);
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: 30px;
+  color: #3affd0;
+  letter-spacing: 2px;
+  text-shadow: 0 0 14px rgba(58, 255, 208, 0.5);
+}
+
+.how-to {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #b9c3ef;
+}
+
+.final-score {
+  margin: 0 0 18px;
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.status {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: #6f7bb0;
+}
+
+.status.err {
+  color: #ff7a7a;
+}
+
+.play-btn {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  padding: 12px 36px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #04130f;
+  background: linear-gradient(180deg, #5dffd9 0%, #2fe3b5 100%);
+  box-shadow: 0 6px 20px rgba(58, 255, 208, 0.4);
+  transition: transform 0.08s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.play-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(58, 255, 208, 0.55);
+}
+
+.play-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.play-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
