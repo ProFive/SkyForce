@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { useArcadeLoop } from '../hooks/useArcadeLoop';
+import { useBackGesture, BACK_RING_C } from '../hooks/useBackGesture';
 import { useArcadeStore } from '../store/arcadeStore';
 import { audio } from '../engine/audio';
 import { speech } from '../engine/speech';
@@ -27,6 +28,8 @@ interface Props {
 /** A single game's screen: canvas, HUD, and the ready/calibrate/game-over overlays. */
 export function GameScreen({ module, handPositionRef, isLoading, error }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const backRef = useRef<HTMLDivElement>(null);
+  const backRingRef = useRef<SVGCircleElement>(null);
   useArcadeLoop({
     module,
     canvasRef,
@@ -43,6 +46,15 @@ export function GameScreen({ module, handPositionRef, isLoading, error }: Props)
   const selectGame = useArcadeStore((s) => s.selectGame);
   const openMenu = useArcadeStore((s) => s.openMenu);
   const toggleMute = useArcadeStore((s) => s.toggleMute);
+
+  // Hold a finger at the top of the screen during play to return to the menu.
+  useBackGesture({
+    active: phase === 'playing',
+    handPositionRef,
+    backRef,
+    ringRef: backRingRef,
+    onTrigger: openMenu,
+  });
 
   const [board, setBoard] = useState<{ scores: HighScore[]; rank: number }>({
     scores: [],
@@ -100,6 +112,28 @@ export function GameScreen({ module, handPositionRef, isLoading, error }: Props)
       <GameCanvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
 
       {phase === 'playing' && <GameHud />}
+
+      {/* Hold a finger up here to go back to the menu (hands-free) */}
+      {phase === 'playing' && (
+        <div className="back-gesture" ref={backRef} aria-hidden="true">
+          <div className="bg-ring-wrap">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle className="bg-track" cx="20" cy="20" r="16" />
+              <circle
+                className="bg-ring"
+                ref={backRingRef}
+                cx="20"
+                cy="20"
+                r="16"
+                strokeDasharray={BACK_RING_C}
+                strokeDashoffset={BACK_RING_C}
+              />
+            </svg>
+            <span className="bg-icon">↑</span>
+          </div>
+          <span className="bg-label">Hold for menu</span>
+        </div>
+      )}
 
       {phase === 'calibrating' && (
         <div className="overlay">

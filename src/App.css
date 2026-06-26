@@ -582,3 +582,73 @@
   color: #9aa6d6;
   text-align: center;
 }
+
+/* ---------- Back-to-menu gesture (hold finger at top during play) ---------- */
+.back-gesture {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.back-gesture.arming {
+  opacity: 1;
+}
+
+.bg-ring-wrap {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.bg-ring-wrap svg {
+  transform: rotate(-90deg); /* fill from the top */
+}
+
+.bg-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 3;
+}
+
+.bg-ring {
+  fill: none;
+  stroke: #3affd0;
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 5px rgba(58, 255, 208, 0.7));
+  transition: stroke-dashoffset 0.05s linear;
+}
+
+.bg-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  line-height: 1;
+  color: #cdd6ff;
+}
+
+.back-gesture.arming .bg-icon {
+  color: #3affd0;
+}
+
+.bg-label {
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #9aa6d6;
+}
+
+.back-gesture.arming .bg-label {
+  color: #3affd0;
+}
