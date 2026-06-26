@@ -9,6 +9,10 @@ Games:
   clear waves, and beat a boss every 5 levels.
 - **Fruit Slash** — swipe to slice flying fruit for combos; avoid the bombs and
   don't let fruit fall.
+- **Catch It** — slide a basket to catch fruit, stars, and gems; let the bombs fall.
+- **Brick Breaker** — finger paddle, bouncing ball, clear the wall, level up.
+- **Dodge Runner** — weave through falling rocks; survive longer for a higher score.
+- **Bug Squash** — touch the bugs to squash them before they vanish; skip the bombs.
 
 New games are pluggable: implement the `GameInstance` contract and register a
 `GameModule` in `src/games/registry.ts`; the shell handles camera, hand
