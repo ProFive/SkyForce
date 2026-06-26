@@ -86,6 +86,8 @@ export interface HudState {
   maxLives?: number;
   level?: number;
   badges?: { key: string; label: string; color: string }[];
+  /** Big centered objective shown during play (e.g. the letter to find). */
+  prompt?: string;
 }
 
 /**
@@ -99,11 +101,15 @@ export interface GameInstance {
   readonly gameOver: boolean;
   onGameOver?: () => void;
   onSfx?: (name: SfxName) => void;
+  /** Speak a short phrase aloud (English TTS) — used by learning games. */
+  onSpeak?: (text: string) => void;
   reset(): void;
   update(hand: HandPosition): void;
   render(ctx: CanvasRenderingContext2D): void;
   hud(): HudState;
 }
+
+export type GameCategory = 'arcade' | 'learn';
 
 /** Static metadata + factory describing a game in the arcade menu. */
 export interface GameModule {
@@ -114,5 +120,6 @@ export interface GameModule {
   accent: string; // theme color (hex)
   howTo: string; // ready-screen instructions
   legend?: { symbol: string; color: string; text: string }[];
+  category?: GameCategory; // defaults to 'arcade'; 'learn' groups under Học
   create(width: number, height: number): GameInstance;
 }

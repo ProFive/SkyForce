@@ -2,16 +2,21 @@ import type { CSSProperties } from 'react';
 import { useArcadeStore } from '../store/arcadeStore';
 import { GAMES } from '../games/registry';
 import { bestScore } from '../store/highScores';
+import type { GameModule } from '../types';
 
 /** The game-picker grid. Cards are buttons, so the finger cursor can select them. */
 export function ArcadeMenu() {
   const selectGame = useArcadeStore((s) => s.selectGame);
 
-  return (
-    <div className="overlay menu-overlay">
-      <div className="menu">
+  const arcade = GAMES.filter((g) => (g.category ?? 'arcade') === 'arcade');
+  const learn = GAMES.filter((g) => g.category === 'learn');
+
+  const Section = ({ title, games }: { title: string; games: GameModule[] }) =>
+    games.length === 0 ? null : (
+      <div className="menu-section">
+        <h2 className="menu-heading">{title}</h2>
         <div className="menu-grid">
-          {GAMES.map((g) => {
+          {games.map((g) => {
             const best = bestScore(g.id);
             return (
               <button
@@ -30,6 +35,14 @@ export function ArcadeMenu() {
             );
           })}
         </div>
+      </div>
+    );
+
+  return (
+    <div className="overlay menu-overlay">
+      <div className="menu">
+        <Section title="Games" games={arcade} />
+        <Section title="Học · Learn" games={learn} />
         <p className="cursor-hint">
           👆 Pick a game — tap, or hover with your finger
         </p>

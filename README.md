@@ -14,6 +14,13 @@ Games:
 - **Dodge Runner** — weave through falling rocks; survive longer for a higher score.
 - **Bug Squash** — touch the bugs to squash them before they vanish; skip the bombs.
 
+Learn (Học) — kid-friendly, no-fail games with English text-to-speech:
+- **Catch the Letter** — the target letter is shown and read aloud; catch the
+  matching falling letter. Win after 8 correct — wrong answers don't hurt.
+
+Games can declare `category: 'learn'` to appear under the Học section, and
+implement `onSpeak` to read prompts aloud via the shared speech layer.
+
 New games are pluggable: implement the `GameInstance` contract and register a
 `GameModule` in `src/games/registry.ts`; the shell handles camera, hand
 tracking, the finger cursor, calibration, audio, HUD, and high scores.

@@ -37,6 +37,12 @@ export function GameHud() {
           ))}
         </div>
       )}
+      {hud.prompt && (
+        <div className="hud-prompt">
+          <span className="hud-prompt-label">Find</span>
+          <span className="hud-prompt-value">{hud.prompt}</span>
+        </div>
+      )}
       {!handTracked && (
         <div className="hud-warn">✋ Show your hand to the camera</div>
       )}

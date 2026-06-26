@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type RefObject } from 'react';
 import { useArcadeLoop } from '../hooks/useArcadeLoop';
 import { useArcadeStore } from '../store/arcadeStore';
 import { audio } from '../engine/audio';
+import { speech } from '../engine/speech';
 import * as calibration from '../engine/calibration';
 import {
   addHighScore,
@@ -87,6 +88,7 @@ export function GameScreen({ module, handPositionRef, isLoading, error }: Props)
     const next = !muted;
     toggleMute();
     audio.setMuted(next);
+    speech.setMuted(next);
   };
 
   const ctrlsDisabled = isLoading || !!error;
@@ -120,7 +122,7 @@ export function GameScreen({ module, handPositionRef, isLoading, error }: Props)
           <div className="panel">
             {phase === 'gameover' ? (
               <>
-                <h2>Game Over</h2>
+                <h2>{module.category === 'learn' ? 'Great job! 🎉' : 'Game Over'}</h2>
                 <p className="final-score">Score {score.toLocaleString()}</p>
                 <HighScoreList scores={bestScores} rank={board.rank} />
                 <div className="btn-row">

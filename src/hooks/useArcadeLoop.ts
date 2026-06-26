@@ -1,5 +1,6 @@
 import { useEffect, type RefObject } from 'react';
 import { audio } from '../engine/audio';
+import { speech } from '../engine/speech';
 import { useArcadeStore } from '../store/arcadeStore';
 import type { GameInstance, GameModule, HandPosition, HudState } from '../types';
 
@@ -41,6 +42,7 @@ export const useArcadeLoop = ({
     const instance: GameInstance = module.create(width, height);
     instance.onGameOver = () => useArcadeStore.getState().setGameOver();
     instance.onSfx = (name) => audio.play(name);
+    instance.onSpeak = (text) => speech.speak(text);
 
     const STEP_MS = 1000 / 60;
     const MAX_STEPS = 5;

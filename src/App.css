@@ -538,3 +538,47 @@
 .link-btn:hover {
   color: #b9c3ef;
 }
+
+/* ---------- Learning prompt (big "Find: X") ---------- */
+.hud-prompt {
+  margin: 10px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.hud-prompt-label {
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #9aa6d6;
+}
+
+.hud-prompt-value {
+  font-size: 58px;
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 0 18px rgba(92, 210, 255, 0.85);
+}
+
+/* ---------- Menu sections (Games / Học) ---------- */
+.menu {
+  max-height: 94%;
+  overflow-y: auto;
+}
+
+.menu-section {
+  margin-bottom: 18px;
+}
+
+.menu-heading {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #9aa6d6;
+  text-align: center;
+}
