@@ -82,3 +82,13 @@ export function isPinching(lm: Landmark[]): boolean {
   if (lm.length < 21) return false;
   return dist(lm[4], lm[8]) < 0.065;
 }
+
+/** True when two index tips are close enough for a clap. */
+export function areHandsClapping(
+  a: { x: number; y: number; available: boolean },
+  b: { x: number; y: number; available: boolean },
+  maxDist = 0.14
+): boolean {
+  if (!a.available || !b.available) return false;
+  return Math.hypot(a.x - b.x, a.y - b.y) < maxDist;
+}

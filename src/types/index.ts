@@ -79,6 +79,8 @@ export interface HandPosition {
   gesture?: HandGesture;
   /** Thumb+index pinch — grab/drag in pinch puzzle games. */
   pinching?: boolean;
+  /** Second tracked hand (index tip), when MediaPipe detects two hands. */
+  other?: Omit<HandPosition, 'other'>;
 }
 
 // ---------------------------------------------------------------------------
