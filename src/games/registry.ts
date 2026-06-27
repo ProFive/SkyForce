@@ -6,6 +6,10 @@ import { brickbreaker } from './brickbreaker';
 import { dodgerunner } from './dodgerunner';
 import { bugsquash } from './bugsquash';
 import { catchletter } from './catchletter';
+import { vocabcatch } from './vocabcatch';
+import { touchanimal } from './touchanimal';
+import { learncolors } from './learncolors';
+import { countgame } from './countgame';
 
 /** Every game in the arcade. Add a module here to surface it on the menu. */
 export const GAMES: GameModule[] = [
@@ -16,6 +20,10 @@ export const GAMES: GameModule[] = [
   dodgerunner,
   bugsquash,
   catchletter,
+  vocabcatch,
+  touchanimal,
+  learncolors,
+  countgame,
 ];
 
 export const getGame = (id: string | null): GameModule | undefined =>
