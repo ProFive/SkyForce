@@ -16,6 +16,14 @@ const SMOOTH = 0.4;
 const GOAL = 8; // correct catches to win (no-fail learning game)
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+// Simple phonics sounds so kids hear the letter's sound, not just its name.
+const PHONICS: Record<string, string> = {
+  A: 'ah', B: 'buh', C: 'kuh', D: 'duh', E: 'eh', F: 'fff', G: 'guh',
+  H: 'huh', I: 'ih', J: 'juh', K: 'kuh', L: 'lll', M: 'mmm', N: 'nnn',
+  O: 'oh', P: 'puh', Q: 'kwuh', R: 'rrr', S: 'sss', T: 'tuh', U: 'uh',
+  V: 'vvv', W: 'wuh', X: 'ks', Y: 'yuh', Z: 'zzz',
+};
+
 export interface LetterItem {
   id: number;
   x: number;
@@ -77,7 +85,11 @@ export class LetterWorld implements GameInstance {
       next = ALPHABET[(Math.random() * ALPHABET.length) | 0];
     }
     this.target = next;
-    this.onSpeak?.(`Find the letter ${next}`);
+    // Say the name and the phonics sound: "Find the letter B. B says buh."
+    const sound = PHONICS[next];
+    this.onSpeak?.(
+      sound ? `Find the letter ${next}. ${next} says ${sound}` : `Find the letter ${next}`
+    );
   }
 
   private spawn() {

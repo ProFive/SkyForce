@@ -24,6 +24,27 @@ export function drawTouch(ctx: CanvasRenderingContext2D, world: TouchWorld) {
       ctx.strokeStyle = 'rgba(255,255,255,0.85)';
       ctx.stroke();
       ctx.restore();
+    } else if (world.mode === 'word') {
+      // The English word on a soft backing disc (read it, match the picture).
+      ctx.save();
+      ctx.fillStyle = 'rgba(12,20,44,0.62)';
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#5cd2ff';
+      ctx.shadowColor = '#5cd2ff';
+      ctx.shadowBlur = 12;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#eaf6ff';
+      // Shrink the font so longer words fit inside the disc.
+      const size = Math.min(c.r * 0.62, (c.r * 1.7) / Math.max(3, c.item.en.length));
+      ctx.font = `bold ${Math.round(size)}px system-ui, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(c.item.en, c.x, c.y);
+      ctx.restore();
     } else {
       // Emoji on a soft backing disc so it pops over the camera feed.
       ctx.save();
