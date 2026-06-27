@@ -2,6 +2,66 @@ import type { QuizWorld, QuizChoice } from './quizWorld';
 import type { ShapeKind } from './content';
 import { drawParticles, drawPopups } from './fx';
 
+/** Draw a simple analog clock face (kid-friendly: o'clock or half-past). */
+export function drawClockFace(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  r: number,
+  hour: number,
+  minute: number
+) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(12,20,44,0.62)';
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#ffd25e';
+  ctx.shadowColor = '#ffd25e';
+  ctx.shadowBlur = 10;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Hour ticks.
+  for (let i = 0; i < 12; i++) {
+    const a = (Math.PI / 6) * i - Math.PI / 2;
+    const x1 = x + Math.cos(a) * (r * 0.78);
+    const y1 = y + Math.sin(a) * (r * 0.78);
+    const x2 = x + Math.cos(a) * (r * 0.9);
+    const y2 = y + Math.sin(a) * (r * 0.9);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  const minAngle = (minute / 60) * Math.PI * 2 - Math.PI / 2;
+  const hrAngle = ((hour % 12) / 12) * Math.PI * 2 + (minute / 60) * (Math.PI / 6) - Math.PI / 2;
+
+  ctx.strokeStyle = '#eaf6ff';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + Math.cos(hrAngle) * r * 0.45, y + Math.sin(hrAngle) * r * 0.45);
+  ctx.stroke();
+
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + Math.cos(minAngle) * r * 0.62, y + Math.sin(minAngle) * r * 0.62);
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffd25e';
+  ctx.beginPath();
+  ctx.arc(x, y, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
 /** Draw a filled shape centered at (x,y) sized to roughly fit radius r. */
 function drawShape(
   ctx: CanvasRenderingContext2D,
@@ -89,6 +149,11 @@ function drawOption(ctx: CanvasRenderingContext2D, c: QuizChoice) {
     ctx.strokeStyle = 'rgba(255,255,255,0.85)';
     ctx.stroke();
     ctx.restore();
+    return;
+  }
+
+  if (option.kind === 'clock' && option.hour !== undefined) {
+    drawClockFace(ctx, x, y, r, option.hour, option.minute ?? 0);
     return;
   }
 

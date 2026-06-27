@@ -1,7 +1,27 @@
-import type { MathWorld } from './mathWorld';
+import type { Particle, Popup } from './fx';
 import { drawParticles, drawPopups } from './fx';
 
-export function drawMath(ctx: CanvasRenderingContext2D, world: MathWorld) {
+export interface MathFallItem {
+  id: number;
+  x: number;
+  y: number;
+  vy: number;
+  r: number;
+  value: number;
+}
+
+export interface NumberCatchView {
+  width: number;
+  height: number;
+  shake: number;
+  prompt: string;
+  items: MathFallItem[];
+  basket: { x: number; y: number; w: number; h: number };
+  particles: Particle[];
+  popups: Popup[];
+}
+
+export function drawNumberCatch(ctx: CanvasRenderingContext2D, world: NumberCatchView) {
   ctx.clearRect(0, 0, world.width, world.height);
 
   ctx.save();
@@ -10,12 +30,11 @@ export function drawMath(ctx: CanvasRenderingContext2D, world: MathWorld) {
     ctx.translate((Math.random() - 0.5) * s, (Math.random() - 0.5) * s);
   }
 
-  // Equation banner at the top.
   ctx.save();
-  const prompt = world.problem.prompt;
-  const size = 40;
+  const prompt = world.prompt;
+  const size = Math.min(36, Math.round(world.width * 0.055));
   ctx.font = `bold ${size}px system-ui, sans-serif`;
-  const w = ctx.measureText(prompt).width + 36;
+  const w = Math.min(ctx.measureText(prompt).width + 36, world.width * 0.9);
   const cx = world.width / 2;
   const y = world.height * 0.1;
   ctx.fillStyle = 'rgba(12,20,44,0.62)';

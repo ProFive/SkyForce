@@ -17,7 +17,7 @@ const BASE_R = 60; // generous hitbox for little fingers at level 1
 const MIN_R = 40; // never shrink below this
 const TOUCH_COOLDOWN = 12; // frames before a fresh touch can register
 
-export type QuizOptionKind = 'emoji' | 'text' | 'color' | 'shape';
+export type QuizOptionKind = 'emoji' | 'text' | 'color' | 'shape' | 'clock';
 
 /** One answer the child can touch. Exactly one option per round is correct. */
 export interface QuizOption {
@@ -27,6 +27,8 @@ export interface QuizOption {
   emoji?: string; // for 'emoji'
   hex?: string; // fill for 'color' / 'shape'
   shape?: ShapeKind; // for 'shape'
+  hour?: number; // for 'clock' (1–12)
+  minute?: number; // for 'clock' (0 or 30)
 }
 
 /** A question + its answer options, produced fresh each round by a generator. */

@@ -22,6 +22,12 @@ import { memoword } from './memoword';
 import { biggersmaller } from './biggersmaller';
 import { orderpop } from './orderpop';
 import { growplant } from './growplant';
+import { numberhunt } from './numberhunt';
+import { flags } from './flags';
+import { opposites } from './opposites';
+import { telltime } from './telltime';
+import { thumbquiz } from './thumbquiz';
+import { rps } from './rps';
 
 /** Every game in the arcade. Add a module here to surface it on the menu. */
 export const GAMES: GameModule[] = [
@@ -48,6 +54,12 @@ export const GAMES: GameModule[] = [
   biggersmaller,
   orderpop,
   growplant,
+  numberhunt,
+  flags,
+  opposites,
+  telltime,
+  thumbquiz,
+  rps,
 ];
 
 export const getGame = (id: string | null): GameModule | undefined =>
