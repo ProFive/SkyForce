@@ -1,9 +1,9 @@
 import { QuizWorld, type QuizGenerator, type QuizOption } from '../engine/quizWorld';
-import { QUIZZES, pick } from '../engine/content';
+import { MORE_QUIZZES, pick } from '../engine/content';
 import type { GameModule } from '../types';
 
 const quizRound: QuizGenerator = () => {
-  const q = pick(QUIZZES);
+  const q = pick(MORE_QUIZZES);
   const options: QuizOption[] = q.options
     .map((text, i) => ({
       kind: 'text' as const,

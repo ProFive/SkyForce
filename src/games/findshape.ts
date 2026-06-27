@@ -1,20 +1,19 @@
 import { QuizWorld, type QuizGenerator, type QuizOption } from '../engine/quizWorld';
-import { SHAPES, pick, type Shape } from '../engine/content';
+import { SHAPES, pick, type Item } from '../engine/content';
 import type { GameModule } from '../types';
 
 const findShapeRound: QuizGenerator = (_level, count) => {
-  const chosen: Shape[] = [];
+  const chosen: Item[] = [];
   while (chosen.length < Math.min(count, SHAPES.length)) {
     const s = pick(SHAPES);
-    if (!chosen.some((c) => c.kind === s.kind)) chosen.push(s);
+    if (!chosen.some((c) => c.en === s.en)) chosen.push(s);
   }
   const target = chosen[0];
   const options: QuizOption[] = chosen
     .map((s) => ({
-      kind: 'shape' as const,
-      shape: s.kind,
-      hex: s.hex,
-      correct: s.kind === target.kind,
+      kind: 'emoji' as const,
+      emoji: s.emoji,
+      correct: s.en === target.en,
     }))
     .sort(() => Math.random() - 0.5);
 
