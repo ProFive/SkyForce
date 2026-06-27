@@ -223,3 +223,94 @@ export const COLORS: Item[] = [
   { en: 'aqua', vi: 'xanh nước biển', hex: '#00FFFF' },
 ];
 export const pick = <T>(arr: T[]): T => arr[(Math.random() * arr.length) | 0];
+
+// ---------------------------------------------------------------------------
+// Shapes — drawn procedurally (no emoji) so "find the circle" reads cleanly.
+// ---------------------------------------------------------------------------
+
+export type ShapeKind =
+  | 'circle'
+  | 'square'
+  | 'triangle'
+  | 'star'
+  | 'heart'
+  | 'diamond';
+
+export interface Shape {
+  en: string;
+  vi: string;
+  kind: ShapeKind;
+  hex: string;
+}
+
+export const SHAPES: Shape[] = [
+  { en: 'circle', vi: 'hình tròn', kind: 'circle', hex: '#ff6b6b' },
+  { en: 'square', vi: 'hình vuông', kind: 'square', hex: '#4dabf7' },
+  { en: 'triangle', vi: 'hình tam giác', kind: 'triangle', hex: '#51cf66' },
+  { en: 'star', vi: 'ngôi sao', kind: 'star', hex: '#ffd43b' },
+  { en: 'heart', vi: 'trái tim', kind: 'heart', hex: '#ff8787' },
+  { en: 'diamond', vi: 'hình thoi', kind: 'diamond', hex: '#da77f2' },
+];
+
+// ---------------------------------------------------------------------------
+// Animal sounds — English onomatopoeia for the "who am I?" listening game.
+// Keyed by Item.en so we can reuse the ANIMALS pack and its emoji.
+// ---------------------------------------------------------------------------
+
+export const ANIMAL_SOUNDS: Record<string, string> = {
+  cat: 'meow',
+  dog: 'woof woof',
+  cow: 'moo',
+  pig: 'oink oink',
+  duck: 'quack quack',
+  sheep: 'baa',
+  goat: 'maa',
+  rooster: 'cock-a-doodle-doo',
+  chicken: 'cluck cluck',
+  horse: 'neigh',
+  lion: 'roar',
+  tiger: 'roar',
+  wolf: 'howl',
+  bird: 'tweet tweet',
+  owl: 'hoot hoot',
+  bee: 'buzz',
+  frog: 'ribbit',
+  snake: 'hiss',
+  monkey: 'ooh ooh ah ah',
+  elephant: 'pawoo',
+};
+
+// ---------------------------------------------------------------------------
+// Quiz bank — kid-friendly general-knowledge questions (science, body, nature).
+// Each question carries its own answer options; `answer` indexes the correct one.
+// ---------------------------------------------------------------------------
+
+export interface QuizQ {
+  q: string; // spoken + shown question
+  vi?: string; // Vietnamese gloss (future bilingual UI)
+  options: string[];
+  answer: number; // index into options
+}
+
+export const QUIZZES: QuizQ[] = [
+  { q: 'What color is the sky on a sunny day?', vi: 'Bầu trời màu gì?', options: ['blue', 'green', 'red'], answer: 0 },
+  { q: 'How many legs does a spider have?', vi: 'Nhện có mấy chân?', options: ['8', '6', '4'], answer: 0 },
+  { q: 'Which animal says moo?', vi: 'Con gì kêu moo?', options: ['cow', 'cat', 'duck'], answer: 0 },
+  { q: 'What do bees make?', vi: 'Ong làm ra gì?', options: ['honey', 'milk', 'bread'], answer: 0 },
+  { q: 'Which one can fly?', vi: 'Con nào biết bay?', options: ['bird', 'fish', 'dog'], answer: 0 },
+  { q: 'What do we use to see?', vi: 'Ta nhìn bằng gì?', options: ['eyes', 'ears', 'nose'], answer: 0 },
+  { q: 'What do we use to hear?', vi: 'Ta nghe bằng gì?', options: ['ears', 'hands', 'feet'], answer: 0 },
+  { q: 'Which is the biggest animal?', vi: 'Con nào to nhất?', options: ['whale', 'ant', 'mouse'], answer: 0 },
+  { q: 'Where do fish live?', vi: 'Cá sống ở đâu?', options: ['water', 'sky', 'tree'], answer: 0 },
+  { q: 'What grows from a tiny seed?', vi: 'Hạt nhỏ lớn thành gì?', options: ['plant', 'rock', 'car'], answer: 0 },
+  { q: 'How many days are in a week?', vi: 'Một tuần có mấy ngày?', options: ['7', '5', '10'], answer: 0 },
+  { q: 'What color is grass?', vi: 'Cỏ màu gì?', options: ['green', 'blue', 'pink'], answer: 0 },
+  { q: 'Which one is cold?', vi: 'Cái nào lạnh?', options: ['ice', 'fire', 'sun'], answer: 0 },
+  { q: 'What gives us light in the day?', vi: 'Ban ngày gì cho ta ánh sáng?', options: ['sun', 'moon', 'star'], answer: 0 },
+  { q: 'Which one do we drink?', vi: 'Cái nào để uống?', options: ['water', 'sand', 'paper'], answer: 0 },
+  { q: 'What does a baby dog called?', vi: 'Chó con gọi là gì?', options: ['puppy', 'kitten', 'calf'], answer: 0 },
+  { q: 'How many fingers on one hand?', vi: 'Một bàn tay có mấy ngón?', options: ['5', '4', '6'], answer: 0 },
+  { q: 'Which season is the coldest?', vi: 'Mùa nào lạnh nhất?', options: ['winter', 'summer', 'spring'], answer: 0 },
+  { q: 'What do plants need to grow?', vi: 'Cây cần gì để lớn?', options: ['water', 'candy', 'toys'], answer: 0 },
+  { q: 'Which one is a fruit?', vi: 'Cái nào là trái cây?', options: ['apple', 'chair', 'shoe'], answer: 0 },
+];
