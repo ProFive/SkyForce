@@ -34,6 +34,12 @@ class AudioEngine {
     return this.muted;
   }
 
+  /** Play a single musical tone (piano / keys game). */
+  playNote(frequencyHz: number, durationSec = 0.38) {
+    if (this.muted || !this.ctx || !this.master) return;
+    this.blip(frequencyHz, durationSec, 'triangle', 0.22);
+  }
+
   play(name: SfxName) {
     if (this.muted || !this.ctx || !this.master) return;
     switch (name) {

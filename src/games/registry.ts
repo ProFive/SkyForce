@@ -28,6 +28,8 @@ import { opposites } from './opposites';
 import { telltime } from './telltime';
 import { thumbquiz } from './thumbquiz';
 import { rps } from './rps';
+import { keys } from './keys';
+import { storytime } from './storytime';
 
 /** Every game in the arcade. Add a module here to surface it on the menu. */
 export const GAMES: GameModule[] = [
@@ -60,6 +62,8 @@ export const GAMES: GameModule[] = [
   telltime,
   thumbquiz,
   rps,
+  keys,
+  storytime,
 ];
 
 export const getGame = (id: string | null): GameModule | undefined =>
