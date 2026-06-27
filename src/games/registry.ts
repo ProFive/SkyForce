@@ -19,6 +19,9 @@ import { sortbin } from './sortbin';
 import { mathcatch } from './mathcatch';
 import { memorymatch } from './memorymatch';
 import { memoword } from './memoword';
+import { biggersmaller } from './biggersmaller';
+import { orderpop } from './orderpop';
+import { growplant } from './growplant';
 
 /** Every game in the arcade. Add a module here to surface it on the menu. */
 export const GAMES: GameModule[] = [
@@ -42,6 +45,9 @@ export const GAMES: GameModule[] = [
   mathcatch,
   memorymatch,
   memoword,
+  biggersmaller,
+  orderpop,
+  growplant,
 ];
 
 export const getGame = (id: string | null): GameModule | undefined =>
