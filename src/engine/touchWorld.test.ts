@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { TouchWorld } from './touchWorld';
 import { ANIMALS, COLORS, type Item } from './content';
+import { MAX_LEVEL, levelGoal } from './levels';
 import type { HandPosition } from '../types';
 
 const W = 480;
@@ -23,14 +24,15 @@ function setRound(w: TouchWorld, target: Item, other: Item) {
 }
 
 describe('TouchWorld', () => {
-  it('exposes the target as the HUD prompt and starts at 0/6', () => {
+  it('starts at level 1 with a 0/3 progress badge and an emoji prompt', () => {
     const w = new TouchWorld(W, H, ANIMALS, 'emoji');
     const hud = w.hud();
+    expect(hud.level).toBe(1);
     expect(hud.prompt).toBe(w.target.emoji ?? w.target.en);
-    expect(hud.badges?.[0].label).toBe('0/6');
+    expect(hud.badges?.[0].label).toBe(`0/${levelGoal(1)}`);
   });
 
-  it('touching the target scores +10 and starts a new round', () => {
+  it('touching the target scores +10', () => {
     const w = new TouchWorld(W, H, ANIMALS, 'emoji');
     setRound(w, ANIMALS[0], ANIMALS[1]);
     w.update(handAt(100, 100));
@@ -47,14 +49,25 @@ describe('TouchWorld', () => {
     expect(w.gameOver).toBe(false);
   });
 
-  it('wins after 6 correct touches', () => {
+  it('advances to the next level after clearing the level goal', () => {
     const w = new TouchWorld(W, H, ANIMALS, 'emoji');
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < levelGoal(1); i++) {
       setRound(w, ANIMALS[0], ANIMALS[1]);
       w.update(handAt(100, 100));
     }
-    expect(w.correct).toBe(6);
+    expect(w.level).toBe(2);
+    expect(w.correct).toBe(0);
+  });
+
+  it('wins only after clearing every level', () => {
+    const w = new TouchWorld(W, H, ANIMALS, 'emoji');
+    let guard = 0;
+    while (!w.gameOver && guard++ < 200) {
+      setRound(w, ANIMALS[0], ANIMALS[1]);
+      w.update(handAt(100, 100));
+    }
     expect(w.gameOver).toBe(true);
+    expect(w.level).toBe(MAX_LEVEL);
   });
 
   it('works with the COLORS pack in color mode', () => {

@@ -11,6 +11,7 @@ export const touchanimal: GameModule = {
   category: 'learn',
   howTo:
     'Listen to the animal name, then reach out and touch the matching animal. ' +
-    'Get 6 right to win — try as many times as you like!',
+    'Clear 10 levels to win — higher levels add more animals and smaller targets. ' +
+    'Try as many times as you like!',
   create: (width, height) => new TouchWorld(width, height, ANIMALS, 'emoji', 'Touch the'),
 };

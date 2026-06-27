@@ -11,6 +11,7 @@ export const learncolors: GameModule = {
   category: 'learn',
   howTo:
     'Listen to the color, then reach out and touch the matching blob. ' +
-    'Find 6 to win — every guess is welcome!',
+    'Clear 10 levels to win — higher levels add more colors and smaller blobs. ' +
+    'Every guess is welcome!',
   create: (width, height) => new TouchWorld(width, height, COLORS, 'color', 'Find'),
 };

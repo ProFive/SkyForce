@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { CountWorld } from './countWorld';
+import { MAX_LEVEL } from './levels';
 import type { HandPosition } from '../types';
 
 const W = 480;
@@ -11,15 +12,18 @@ function dropStarOnBasket(w: CountWorld) {
 }
 
 describe('CountWorld', () => {
-  it('exposes the target count as the HUD prompt and starts at 0/target', () => {
+  it('starts at level 1 counting up to 1', () => {
     const w = new CountWorld(W, H);
     const hud = w.hud();
-    expect(hud.prompt).toBe(String(w.target));
-    expect(hud.badges?.[0].label).toBe(`0/${w.target}`);
+    expect(hud.level).toBe(1);
+    expect(w.target).toBe(1);
+    expect(hud.prompt).toBe('1');
+    expect(hud.badges?.[0].label).toBe('0/1');
   });
 
   it('catching a star increments the count', () => {
     const w = new CountWorld(W, H);
+    w.level = 3;
     w.target = 3;
     w.caught = 0;
     dropStarOnBasket(w);
@@ -28,28 +32,28 @@ describe('CountWorld', () => {
     expect(w.score).toBe(5);
   });
 
-  it('reaching the target completes a round and picks a new target', () => {
+  it('reaching the target advances to the next level with a bigger count', () => {
     const w = new CountWorld(W, H);
+    w.level = 2;
     w.target = 2;
     w.caught = 0;
     dropStarOnBasket(w);
     w.update(NO_HAND); // caught = 1
     dropStarOnBasket(w);
-    w.update(NO_HAND); // caught = 2 -> round complete
-    expect(w.rounds).toBe(1);
-    expect(w.caught).toBe(0); // reset for the next round
+    w.update(NO_HAND); // caught = 2 -> level complete
+    expect(w.level).toBe(3);
+    expect(w.target).toBe(3);
+    expect(w.caught).toBe(0);
   });
 
-  it('wins after 5 completed rounds', () => {
+  it('wins only after clearing every level', () => {
     const w = new CountWorld(W, H);
-    for (let r = 0; r < 5; r++) {
-      const goal = w.target;
-      for (let i = 0; i < goal; i++) {
-        dropStarOnBasket(w);
-        w.update(NO_HAND);
-      }
+    let guard = 0;
+    while (!w.gameOver && guard++ < 100) {
+      dropStarOnBasket(w);
+      w.update(NO_HAND);
     }
-    expect(w.rounds).toBe(5);
     expect(w.gameOver).toBe(true);
+    expect(w.level).toBe(MAX_LEVEL);
   });
 });

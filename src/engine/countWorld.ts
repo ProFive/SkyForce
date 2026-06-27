@@ -8,13 +8,12 @@ import {
   stepParticles,
   stepPopups,
 } from './fx';
+import { MAX_LEVEL } from './levels';
 import { drawCount } from './countRenderer';
 
 const BASKET_W = 104;
 const BASKET_H = 44;
 const SMOOTH = 0.4;
-const ROUNDS = 5; // completed counts to win
-const MAX_TARGET = 5; // counts only go up to five for this age group
 
 const NUMBER_WORDS = ['one', 'two', 'three', 'four', 'five'];
 
@@ -34,9 +33,9 @@ export class CountWorld implements GameInstance {
   stars: Star[] = [];
   particles: Particle[] = [];
   popups: Popup[] = [];
-  target = 1; // how many stars to catch this round
-  caught = 0; // stars caught so far this round
-  rounds = 0; // completed rounds
+  level = 1; // each level asks the child to count up to a bigger number
+  target = 1; // how many stars to catch this level (== level)
+  caught = 0; // stars caught so far this level
   score = 0;
   shake = 0;
   gameOver = false;
@@ -64,22 +63,28 @@ export class CountWorld implements GameInstance {
     this.stars = [];
     this.particles = [];
     this.popups = [];
-    this.target = 1;
+    this.level = 1;
     this.caught = 0;
-    this.rounds = 0;
     this.score = 0;
     this.shake = 0;
     this.gameOver = false;
     this.spawnTimer = 20;
-    this.pickTarget();
+    this.startLevel('');
   }
 
-  private pickTarget() {
-    let next = this.target;
-    while (next === this.target) next = 1 + ((Math.random() * MAX_TARGET) | 0);
-    this.target = next;
+  private startLevel(announce: string) {
+    this.target = Math.min(this.level, NUMBER_WORDS.length);
     this.caught = 0;
-    this.onSpeak?.(`Catch ${next} ${next === 1 ? 'star' : 'stars'}`);
+    const noun = this.target === 1 ? 'star' : 'stars';
+    this.onSpeak?.(`${announce}Catch ${this.target} ${noun}`);
+  }
+
+  // Stars fall faster and a touch more often as the level climbs.
+  private spawnEvery() {
+    return Math.max(28, 50 - this.level * 4);
+  }
+  private fallSpeed() {
+    return 1.5 + this.level * 0.3 + Math.random() * 0.6;
   }
 
   private spawn() {
@@ -88,7 +93,7 @@ export class CountWorld implements GameInstance {
       id: this.nextId++,
       x: r + 6 + Math.random() * (this.width - 2 * (r + 6)),
       y: -r,
-      vy: 1.9 + Math.random() * 0.7,
+      vy: this.fallSpeed(),
       r,
     });
   }
@@ -104,7 +109,7 @@ export class CountWorld implements GameInstance {
     this.basket.x = clamp(this.basket.x, this.basket.w / 2, this.width - this.basket.w / 2);
     this.basket.y = clamp(this.basket.y, this.height * 0.45, this.height - 60);
 
-    if (++this.spawnTimer >= 46) {
+    if (++this.spawnTimer >= this.spawnEvery()) {
       this.spawnTimer = 0;
       this.spawn();
     }
@@ -121,23 +126,22 @@ export class CountWorld implements GameInstance {
       this.score += 5;
       this.caught += 1;
       burst(this.particles, s.x, s.y, '#ffe45e', 16);
-      // Count aloud as each star lands.
-      const word = NUMBER_WORDS[Math.min(this.caught, MAX_TARGET) - 1];
+      const word = NUMBER_WORDS[Math.min(this.caught, NUMBER_WORDS.length) - 1];
       popup(this.popups, s.x, s.y, String(this.caught), '#ffe45e');
 
       if (this.caught >= this.target) {
-        this.rounds += 1;
-        this.onSpeak?.(`${word}! Great!`);
-        if (this.rounds >= ROUNDS) {
+        if (this.level >= MAX_LEVEL) {
           this.gameOver = true;
           this.onSfx?.('level');
-          this.onSpeak?.('Well done!');
+          this.onSpeak?.(`${word}! You did it! Well done!`);
           this.onGameOver?.();
         } else {
-          this.onSfx?.('powerup');
-          this.pickTarget();
+          this.level += 1;
+          this.onSfx?.('level');
+          this.startLevel(`${word}! Level ${this.level}! `);
         }
       } else {
+        // Count aloud as each star lands.
         this.onSfx?.('hit');
         this.onSpeak?.(word);
       }
@@ -158,6 +162,7 @@ export class CountWorld implements GameInstance {
   hud(): HudState {
     return {
       score: this.score,
+      level: this.level,
       prompt: String(this.target),
       badges: [
         { key: 'progress', label: `${this.caught}/${this.target}`, color: '#ffd25e' },
