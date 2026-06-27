@@ -16,6 +16,9 @@ import { findshape } from './findshape';
 import { animalsound } from './animalsound';
 import { quiz } from './quiz';
 import { sortbin } from './sortbin';
+import { mathcatch } from './mathcatch';
+import { memorymatch } from './memorymatch';
+import { memoword } from './memoword';
 
 /** Every game in the arcade. Add a module here to surface it on the menu. */
 export const GAMES: GameModule[] = [
@@ -36,6 +39,9 @@ export const GAMES: GameModule[] = [
   animalsound,
   quiz,
   sortbin,
+  mathcatch,
+  memorymatch,
+  memoword,
 ];
 
 export const getGame = (id: string | null): GameModule | undefined =>
