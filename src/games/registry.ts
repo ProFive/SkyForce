@@ -15,6 +15,7 @@ import { wordmatch } from './wordmatch';
 import { findshape } from './findshape';
 import { animalsound } from './animalsound';
 import { quiz } from './quiz';
+import { sortbin } from './sortbin';
 
 /** Every game in the arcade. Add a module here to surface it on the menu. */
 export const GAMES: GameModule[] = [
@@ -34,6 +35,7 @@ export const GAMES: GameModule[] = [
   findshape,
   animalsound,
   quiz,
+  sortbin,
 ];
 
 export const getGame = (id: string | null): GameModule | undefined =>
