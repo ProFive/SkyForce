@@ -637,6 +637,20 @@
   text-align: center;
 }
 
+.menu-subsection {
+  margin: 0 0 14px;
+}
+
+.menu-subheading {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #6f7bb0;
+  text-align: center;
+}
+
 /* ---------- Back-to-menu gesture (hold finger at top during play) ---------- */
 .back-gesture {
   position: absolute;

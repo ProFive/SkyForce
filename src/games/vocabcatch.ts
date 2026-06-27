@@ -8,6 +8,7 @@ export const vocabcatch: GameModule = {
   tagline: 'Hear it, catch it — learn words',
   accent: '#ffd25e',
   category: 'learn',
+  group: 'age3to5',
   howTo:
     'Listen to the word, then slide the basket to catch the matching picture. ' +
     'Clear 10 levels to win — each one needs more catches and falls faster. ' +

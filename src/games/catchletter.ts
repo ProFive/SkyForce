@@ -8,6 +8,7 @@ export const catchletter: GameModule = {
   tagline: 'Learn the ABCs and their sounds',
   accent: '#5cd2ff',
   category: 'learn',
+  group: 'age6to10',
   howTo:
     'Listen to the letter and the sound it makes (“B says buh”), then slide ' +
     'the basket to catch that letter as it falls. Catch 8 to win — no wrong ' +

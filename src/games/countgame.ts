@@ -8,6 +8,7 @@ export const countgame: GameModule = {
   tagline: 'Catch the stars and count along',
   accent: '#ffe45e',
   category: 'learn',
+  group: 'age3to5',
   howTo:
     'Listen for how many stars to catch, then slide the basket to catch them ' +
     'while we count together. Count higher and faster each level — clear 10 to win!',

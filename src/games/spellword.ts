@@ -8,6 +8,7 @@ export const spellword: GameModule = {
   tagline: 'Slice the letters in order to spell',
   accent: '#7dff9b',
   category: 'learn',
+  group: 'age6to10',
   howTo:
     'Look at the picture and listen to the word. Swipe your finger to slice ' +
     'the flying letters in the right order to spell it (C-A-T). Spell 6 words ' +

@@ -9,6 +9,7 @@ export const memorymatch: GameModule = {
   tagline: 'Flip two cards — find the matching animals',
   accent: '#da77f2',
   category: 'learn',
+  group: 'age3to5',
   howTo:
     'Touch a card to flip it, then touch another. When two cards show the same ' +
     'animal, they stay matched. Find enough pairs to clear each level — ' +

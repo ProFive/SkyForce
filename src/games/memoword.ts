@@ -9,6 +9,7 @@ export const memoword: GameModule = {
   tagline: 'Match the animal picture to its English word',
   accent: '#5cd2ff',
   category: 'learn',
+  group: 'age6to10',
   howTo:
     'Flip a card to see a picture or a word. Find the picture and the English ' +
     'word that go together — for example 🐱 and cat. Clear 10 levels to win; ' +

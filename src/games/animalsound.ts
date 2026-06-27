@@ -35,6 +35,7 @@ export const animalsound: GameModule = {
   tagline: 'Hear the sound, touch the animal',
   accent: '#ffb86b',
   category: 'learn',
+  group: 'age3to5',
   howTo:
     'Listen — "I say meow, who am I?" — then touch the animal that makes that sound. ' +
     'Clear 10 levels to win, with more animals to choose from as you go. ' +

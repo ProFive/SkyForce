@@ -22,6 +22,7 @@ export const quiz: GameModule = {
   tagline: 'Listen, then touch the right answer',
   accent: '#da77f2',
   category: 'learn',
+  group: 'age6to10',
   howTo:
     'Listen to the question, then touch the answer you think is right. ' +
     'Questions cover animals, the body, and nature. ' +
