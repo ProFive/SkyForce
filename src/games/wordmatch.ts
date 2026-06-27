@@ -9,6 +9,7 @@ export const wordmatch: GameModule = {
   tagline: 'See the picture, touch the right word',
   accent: '#5cd2ff',
   category: 'learn',
+  group: 'age6to10',
   howTo:
     'Look at the picture, then read the words and touch the one that matches. ' +
     'Clear 10 levels to win — higher levels add more words and smaller targets.',

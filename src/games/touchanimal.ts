@@ -9,6 +9,7 @@ export const touchanimal: GameModule = {
   tagline: 'Listen, then touch the right animal',
   accent: '#7dff9b',
   category: 'learn',
+  group: 'age3to5',
   howTo:
     'Listen to the animal name, then reach out and touch the matching animal. ' +
     'Clear 10 levels to win — higher levels add more animals and smaller targets. ' +

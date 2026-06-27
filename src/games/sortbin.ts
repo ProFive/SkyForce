@@ -9,6 +9,7 @@ export const sortbin: GameModule = {
   tagline: 'Fruit in the basket, animals in the pen',
   accent: '#7dff9b',
   category: 'learn',
+  group: 'age3to5',
   howTo:
     'Move your finger to the left side to catch fruit in the basket. ' +
     'Move to the right side to put animals in the pen. ' +

@@ -8,6 +8,7 @@ export const mathcatch: GameModule = {
   tagline: 'Read the sum, catch the answer',
   accent: '#ffd25e',
   category: 'learn',
+  group: 'age6to10',
   howTo:
     'Read the equation at the top, then move your finger to slide the basket. ' +
     'Catch the falling number that is the right answer. ' +

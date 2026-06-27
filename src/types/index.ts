@@ -111,6 +111,9 @@ export interface GameInstance {
 
 export type GameCategory = 'arcade' | 'learn';
 
+/** Age/skill bucket for learning games, shown as a subgroup under "Học · Learn". */
+export type LearnGroup = 'age3to5' | 'age6to10' | 'advanced';
+
 /** Static metadata + factory describing a game in the arcade menu. */
 export interface GameModule {
   id: string;
@@ -121,5 +124,6 @@ export interface GameModule {
   howTo: string; // ready-screen instructions
   legend?: { symbol: string; color: string; text: string }[];
   category?: GameCategory; // defaults to 'arcade'; 'learn' groups under Học
+  group?: LearnGroup; // for 'learn' games: which age subgroup (defaults to age3to5)
   create(width: number, height: number): GameInstance;
 }

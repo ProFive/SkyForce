@@ -31,6 +31,7 @@ export const findshape: GameModule = {
   tagline: 'Listen, then touch the right shape',
   accent: '#4dabf7',
   category: 'learn',
+  group: 'age3to5',
   howTo:
     'Listen to the shape name, then reach out and touch the matching shape. ' +
     'Clear 10 levels to win — higher levels add more shapes and smaller targets. ' +

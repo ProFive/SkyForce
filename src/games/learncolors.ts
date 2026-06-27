@@ -9,6 +9,7 @@ export const learncolors: GameModule = {
   tagline: 'Listen, then find the right color',
   accent: '#b07dff',
   category: 'learn',
+  group: 'age3to5',
   howTo:
     'Listen to the color, then reach out and touch the matching blob. ' +
     'Clear 10 levels to win — higher levels add more colors and smaller blobs. ' +
