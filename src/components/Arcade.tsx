@@ -67,7 +67,7 @@ export function Arcade() {
         )}
       </button>
 
-      <div className="title-bar">
+      <div className={`title-bar${phase === 'playing' ? ' title-bar--hidden' : ''}`}>
         <h1>{showGame ? game!.title : 'ARCADE'}</h1>
         <span className="subtitle">
           {showGame ? game!.tagline : 'hand-controlled games'}

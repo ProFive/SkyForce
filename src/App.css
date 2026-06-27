@@ -1,21 +1,28 @@
 .stage {
+  position: relative;
   height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  padding: 14px 0 16px;
-  box-sizing: border-box;
+  height: 100dvh; /* fill the dynamic viewport (no gap under mobile URL bars) */
+  width: 100vw;
+  overflow: hidden;
   background:
     radial-gradient(circle at 50% 0%, #1b2a5e 0%, #070914 55%, #04050c 100%);
 }
 
+/* Title floats over the play area so it never steals screen height. */
 .title-bar {
-  flex: none;
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  z-index: 7;
   text-align: center;
   user-select: none;
+  pointer-events: none;
+}
+
+/* Keep the game fully unobstructed while playing. */
+.title-bar--hidden {
+  display: none;
 }
 
 /* ---------- Full-screen toggle ---------- */
@@ -86,22 +93,15 @@
   color: #6f7bb0;
 }
 
-/* The play area — camera background, canvas, and overlays, stacked together.
-   Fills the remaining window height while keeping the 480:720 (2:3) ratio. */
+/* The play area — camera background, canvas, and overlays — fills the whole
+   screen so every game is full-bleed on both menu and gameplay. */
 .board {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
-  aspect-ratio: 480 / 720;
-  width: auto;
-  max-width: 96vw;
-  border-radius: 14px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: #05060f; /* fallback before the camera stream is live */
-  box-shadow:
-    0 0 0 1px rgba(120, 160, 255, 0.25),
-    0 0 40px rgba(40, 80, 200, 0.35),
-    0 18px 60px rgba(0, 0, 0, 0.6);
 }
 
 /* Camera feed as the full-board background (mirrored, selfie view). */
