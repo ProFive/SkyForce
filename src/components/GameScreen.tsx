@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { useArcadeLoop } from '../hooks/useArcadeLoop';
+import { useAuxTracking } from '../hooks/useAuxTracking';
 import { useBackGesture, BACK_RING_C } from '../hooks/useBackGesture';
 import { useArcadeStore } from '../store/arcadeStore';
 import { audio } from '../engine/audio';
@@ -20,16 +21,32 @@ const CALIBRATION_SECONDS = 5;
 
 interface Props {
   module: GameModule;
+  videoRef: RefObject<HTMLVideoElement | null>;
   handPositionRef: RefObject<HandPosition>;
   isLoading: boolean;
   error: string | null;
 }
 
 /** A single game's screen: canvas, HUD, and the ready/calibrate/game-over overlays. */
-export function GameScreen({ module, handPositionRef, isLoading, error }: Props) {
+export function GameScreen({
+  module,
+  videoRef,
+  handPositionRef,
+  isLoading,
+  error,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const backRef = useRef<HTMLDivElement>(null);
   const backRingRef = useRef<SVGCircleElement>(null);
+  const phase = useArcadeStore((s) => s.phase);
+
+  useAuxTracking({
+    videoRef,
+    handPositionRef,
+    mode: module.input,
+    active: phase === 'playing' || phase === 'ready',
+  });
+
   useArcadeLoop({
     module,
     canvasRef,
@@ -38,7 +55,6 @@ export function GameScreen({ module, handPositionRef, isLoading, error }: Props)
     height: CANVAS_HEIGHT,
   });
 
-  const phase = useArcadeStore((s) => s.phase);
   const score = useArcadeStore((s) => s.hud.score);
   const muted = useArcadeStore((s) => s.muted);
   const start = useArcadeStore((s) => s.start);

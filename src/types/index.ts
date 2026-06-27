@@ -81,7 +81,14 @@ export interface HandPosition {
   pinching?: boolean;
   /** Second tracked hand (index tip), when MediaPipe detects two hands. */
   other?: Omit<HandPosition, 'other'>;
+  /** Full-body pose landmarks (mirrored x, 0..1) when PoseLandmarker is active. */
+  pose?: { available: boolean; landmarks?: Vec2[] };
+  /** Head steering from FaceLandmarker (calibrated 0..1), for accessibility games. */
+  headSteer?: { available: boolean; x: number };
 }
+
+/** Which tracking pipeline a game needs beyond the default index finger. */
+export type GameInputMode = 'hand' | 'pose' | 'head';
 
 // ---------------------------------------------------------------------------
 // Arcade contracts — shared across every game so one shell can host them all.
@@ -135,5 +142,7 @@ export interface GameModule {
   legend?: { symbol: string; color: string; text: string }[];
   category?: GameCategory; // defaults to 'arcade'; 'learn' groups under Học
   group?: LearnGroup; // for 'learn' games: which age subgroup (defaults to age3to5)
+  /** Extra MediaPipe model: pose or head tilt (default hand-only). */
+  input?: GameInputMode;
   create(width: number, height: number): GameInstance;
 }

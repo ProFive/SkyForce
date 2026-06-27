@@ -85,6 +85,7 @@ export function Arcade() {
         {showGame ? (
           <GameScreen
             module={game!}
+            videoRef={videoRef}
             handPositionRef={handPositionRef}
             isLoading={isLoading}
             error={error}
