@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { classifyGesture, countExtendedFingers, type Landmark } from './gestures';
+import { classifyGesture, countExtendedFingers, isPinching, type Landmark } from './gestures';
 
 /** Build a neutral flat-hand pose (all landmarks at origin-ish). */
 function flatHand(): Landmark[] {
@@ -30,5 +30,14 @@ describe('gestures', () => {
     lm[8] = { x: 0.5, y: 0.2 };
     lm[6] = { x: 0.5, y: 0.45 };
     expect(countExtendedFingers(lm)).toBeGreaterThanOrEqual(1);
+  });
+
+  it('detects pinch when thumb and index tips are close', () => {
+    const lm = flatHand();
+    lm[4] = { x: 0.5, y: 0.5 };
+    lm[8] = { x: 0.52, y: 0.51 };
+    expect(isPinching(lm)).toBe(true);
+    lm[8] = { x: 0.7, y: 0.5 };
+    expect(isPinching(lm)).toBe(false);
   });
 });

@@ -30,6 +30,7 @@ import { thumbquiz } from './thumbquiz';
 import { rps } from './rps';
 import { keys } from './keys';
 import { storytime } from './storytime';
+import { pinchpuzzle } from './pinchpuzzle';
 
 /** Every game in the arcade. Add a module here to surface it on the menu. */
 export const GAMES: GameModule[] = [
@@ -64,6 +65,7 @@ export const GAMES: GameModule[] = [
   rps,
   keys,
   storytime,
+  pinchpuzzle,
 ];
 
 export const getGame = (id: string | null): GameModule | undefined =>

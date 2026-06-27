@@ -76,3 +76,9 @@ export function classifyGesture(lm: Landmark[]): HandGesture {
 
   return 'none';
 }
+
+/** True when thumb and index tips are close (pinch grab). */
+export function isPinching(lm: Landmark[]): boolean {
+  if (lm.length < 21) return false;
+  return dist(lm[4], lm[8]) < 0.065;
+}

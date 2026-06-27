@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { HandLandmarker } from '@mediapipe/tasks-vision';
 import * as calibration from '../engine/calibration';
-import { classifyGesture } from '../engine/gestures';
+import { classifyGesture, isPinching } from '../engine/gestures';
 import type { HandPosition } from '../types';
 
 const WASM_BASE_PATH =
@@ -109,16 +109,19 @@ export const useHandTracking = () => {
           const rawY = tip.y;
           calibration.observe(rawX, rawY); // grows the box while calibrating
           const mapped = calibration.apply(rawX, rawY);
+          const landmarks = lm.map((p) => ({ x: p.x, y: p.y, z: p.z }));
           handPositionRef.current = {
             x: mapped.x,
             y: mapped.y,
             confidence: 1,
             available: true,
-            gesture: classifyGesture(lm.map((p) => ({ x: p.x, y: p.y, z: p.z }))),
+            gesture: classifyGesture(landmarks),
+            pinching: isPinching(landmarks),
           };
         } else {
           handPositionRef.current.available = false;
           handPositionRef.current.gesture = 'none';
+          handPositionRef.current.pinching = false;
         }
       }
       rafRef.current = requestAnimationFrame(detectLoop);
