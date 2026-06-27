@@ -33,6 +33,8 @@ import { storytime } from './storytime';
 import { pinchpuzzle } from './pinchpuzzle';
 import { twohand } from './twohand';
 import { versus } from './versus';
+import { posedance } from './posedance';
+import { headsteer } from './headsteer';
 
 /** Every game in the arcade. Add a module here to surface it on the menu. */
 export const GAMES: GameModule[] = [
@@ -70,6 +72,8 @@ export const GAMES: GameModule[] = [
   pinchpuzzle,
   twohand,
   versus,
+  posedance,
+  headsteer,
 ];
 
 export const getGame = (id: string | null): GameModule | undefined =>
