@@ -1,3 +1,5 @@
+import type { HandGesture } from '../engine/gestures';
+
 export interface Vec2 {
   x: number;
   y: number;
@@ -73,6 +75,8 @@ export interface HandPosition {
   y: number;
   confidence: number;
   available: boolean;
+  /** Optional coarse gesture from MediaPipe landmarks (advanced games). */
+  gesture?: HandGesture;
 }
 
 // ---------------------------------------------------------------------------

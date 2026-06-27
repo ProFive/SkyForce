@@ -481,3 +481,265 @@ export const MORE_QUIZZES: QuizQ[] = [
   { q: 'What do you wear on your feet?', vi: 'Con mang gì ở chân?', options: ['shoes', 'hat', 'gloves'], answer: 0 },
   { q: 'What do you wear on your head?', vi: 'Con đội gì trên đầu?', options: ['hat', 'sock', 'belt'], answer: 0 },
 ];
+
+// ---------------------------------------------------------------------------
+// Opposites & synonyms — advanced vocabulary pairs.
+// ---------------------------------------------------------------------------
+
+export interface WordPair {
+  a: Item;
+  b: Item;
+}
+
+export const OPPOSITES: WordPair[] = [
+  { a: { en: 'hot', vi: 'nóng' }, b: { en: 'cold', vi: 'lạnh' } },
+  { a: { en: 'big', vi: 'to' }, b: { en: 'small', vi: 'nhỏ' } },
+  { a: { en: 'tall', vi: 'cao' }, b: { en: 'short', vi: 'thấp' } },
+  { a: { en: 'long', vi: 'dài' }, b: { en: 'short', vi: 'ngắn' } },
+  { a: { en: 'wide', vi: 'rộng' }, b: { en: 'narrow', vi: 'hẹp' } },
+  { a: { en: 'thick', vi: 'dày' }, b: { en: 'thin', vi: 'mỏng' } },
+  { a: { en: 'heavy', vi: 'nặng' }, b: { en: 'light', vi: 'nhẹ' } },
+
+  { a: { en: 'up', vi: 'lên' }, b: { en: 'down', vi: 'xuống' } },
+  { a: { en: 'left', vi: 'trái' }, b: { en: 'right', vi: 'phải' } },
+  { a: { en: 'inside', vi: 'bên trong' }, b: { en: 'outside', vi: 'bên ngoài' } },
+  { a: { en: 'front', vi: 'phía trước' }, b: { en: 'back', vi: 'phía sau' } },
+  { a: { en: 'above', vi: 'ở trên' }, b: { en: 'below', vi: 'ở dưới' } },
+  { a: { en: 'over', vi: 'ở trên' }, b: { en: 'under', vi: 'ở dưới' } },
+  { a: { en: 'near', vi: 'gần' }, b: { en: 'far', vi: 'xa' } },
+
+  { a: { en: 'day', vi: 'ngày' }, b: { en: 'night', vi: 'đêm' } },
+  { a: { en: 'morning', vi: 'buổi sáng' }, b: { en: 'evening', vi: 'buổi tối' } },
+  { a: { en: 'early', vi: 'sớm' }, b: { en: 'late', vi: 'muộn' } },
+
+  { a: { en: 'fast', vi: 'nhanh' }, b: { en: 'slow', vi: 'chậm' } },
+  { a: { en: 'happy', vi: 'vui' }, b: { en: 'sad', vi: 'buồn' } },
+  { a: { en: 'laugh', vi: 'cười' }, b: { en: 'cry', vi: 'khóc' } },
+  { a: { en: 'strong', vi: 'mạnh' }, b: { en: 'weak', vi: 'yếu' } },
+  { a: { en: 'healthy', vi: 'khỏe mạnh' }, b: { en: 'sick', vi: 'ốm' } },
+  { a: { en: 'awake', vi: 'thức' }, b: { en: 'asleep', vi: 'ngủ' } },
+
+  { a: { en: 'open', vi: 'mở' }, b: { en: 'closed', vi: 'đóng' } },
+  { a: { en: 'on', vi: 'bật' }, b: { en: 'off', vi: 'tắt' } },
+  { a: { en: 'full', vi: 'đầy' }, b: { en: 'empty', vi: 'rỗng' } },
+  { a: { en: 'clean', vi: 'sạch' }, b: { en: 'dirty', vi: 'bẩn' } },
+  { a: { en: 'wet', vi: 'ướt' }, b: { en: 'dry', vi: 'khô' } },
+  { a: { en: 'hard', vi: 'cứng' }, b: { en: 'soft', vi: 'mềm' } },
+  { a: { en: 'new', vi: 'mới' }, b: { en: 'old', vi: 'cũ' } },
+
+  { a: { en: 'good', vi: 'tốt' }, b: { en: 'bad', vi: 'xấu' } },
+  { a: { en: 'right', vi: 'đúng' }, b: { en: 'wrong', vi: 'sai' } },
+  { a: { en: 'easy', vi: 'dễ' }, b: { en: 'difficult', vi: 'khó' } },
+  { a: { en: 'same', vi: 'giống nhau' }, b: { en: 'different', vi: 'khác nhau' } },
+
+  { a: { en: 'loud', vi: 'ồn ào' }, b: { en: 'quiet', vi: 'yên tĩnh' } },
+  { a: { en: 'light', vi: 'sáng' }, b: { en: 'dark', vi: 'tối' } },
+  { a: { en: 'rich', vi: 'giàu' }, b: { en: 'poor', vi: 'nghèo' } },
+
+  { a: { en: 'give', vi: 'cho' }, b: { en: 'take', vi: 'lấy' } },
+  { a: { en: 'come', vi: 'đến' }, b: { en: 'go', vi: 'đi' } },
+  { a: { en: 'buy', vi: 'mua' }, b: { en: 'sell', vi: 'bán' } },
+  { a: { en: 'push', vi: 'đẩy' }, b: { en: 'pull', vi: 'kéo' } },
+  { a: { en: 'start', vi: 'bắt đầu' }, b: { en: 'finish', vi: 'kết thúc' } },
+  { a: { en: 'enter', vi: 'đi vào' }, b: { en: 'exit', vi: 'đi ra' } },
+
+  { a: { en: 'alive', vi: 'sống' }, b: { en: 'dead', vi: 'chết' } },
+  { a: { en: 'true', vi: 'đúng' }, b: { en: 'false', vi: 'sai' } },
+  { a: { en: 'beautiful', vi: 'đẹp' }, b: { en: 'ugly', vi: 'xấu xí' } },
+  { a: { en: 'young', vi: 'trẻ' }, b: { en: 'old', vi: 'già' } },
+];
+// ---------------------------------------------------------------------------
+// Countries — flag emoji for geography quizzes.
+// ---------------------------------------------------------------------------
+
+export interface Country {
+  en: string;
+  vi: string;
+  flag: string;
+}
+
+export const COUNTRIES: Country[] = [
+  // Asia
+  { en: 'Vietnam', vi: 'Việt Nam', flag: '🇻🇳' },
+  { en: 'Japan', vi: 'Nhật Bản', flag: '🇯🇵' },
+  { en: 'China', vi: 'Trung Quốc', flag: '🇨🇳' },
+  { en: 'South Korea', vi: 'Hàn Quốc', flag: '🇰🇷' },
+  { en: 'North Korea', vi: 'Triều Tiên', flag: '🇰🇵' },
+  { en: 'Thailand', vi: 'Thái Lan', flag: '🇹🇭' },
+  { en: 'Singapore', vi: 'Singapore', flag: '🇸🇬' },
+  { en: 'Malaysia', vi: 'Malaysia', flag: '🇲🇾' },
+  { en: 'Indonesia', vi: 'Indonesia', flag: '🇮🇩' },
+  { en: 'Philippines', vi: 'Philippines', flag: '🇵🇭' },
+  { en: 'India', vi: 'Ấn Độ', flag: '🇮🇳' },
+  { en: 'Pakistan', vi: 'Pakistan', flag: '🇵🇰' },
+  { en: 'Bangladesh', vi: 'Bangladesh', flag: '🇧🇩' },
+  { en: 'Saudi Arabia', vi: 'Ả Rập Xê Út', flag: '🇸🇦' },
+  { en: 'United Arab Emirates', vi: 'Các Tiểu vương quốc Ả Rập Thống nhất', flag: '🇦🇪' },
+
+  // Europe
+  { en: 'United Kingdom', vi: 'Vương quốc Anh', flag: '🇬🇧' },
+  { en: 'France', vi: 'Pháp', flag: '🇫🇷' },
+  { en: 'Germany', vi: 'Đức', flag: '🇩🇪' },
+  { en: 'Italy', vi: 'Ý', flag: '🇮🇹' },
+  { en: 'Spain', vi: 'Tây Ban Nha', flag: '🇪🇸' },
+  { en: 'Portugal', vi: 'Bồ Đào Nha', flag: '🇵🇹' },
+  { en: 'Netherlands', vi: 'Hà Lan', flag: '🇳🇱' },
+  { en: 'Belgium', vi: 'Bỉ', flag: '🇧🇪' },
+  { en: 'Switzerland', vi: 'Thụy Sĩ', flag: '🇨🇭' },
+  { en: 'Sweden', vi: 'Thụy Điển', flag: '🇸🇪' },
+  { en: 'Norway', vi: 'Na Uy', flag: '🇳🇴' },
+  { en: 'Denmark', vi: 'Đan Mạch', flag: '🇩🇰' },
+  { en: 'Finland', vi: 'Phần Lan', flag: '🇫🇮' },
+  { en: 'Ireland', vi: 'Ireland', flag: '🇮🇪' },
+  { en: 'Russia', vi: 'Nga', flag: '🇷🇺' },
+
+  // North America
+  { en: 'United States', vi: 'Hoa Kỳ', flag: '🇺🇸' },
+  { en: 'Canada', vi: 'Canada', flag: '🇨🇦' },
+  { en: 'Mexico', vi: 'Mexico', flag: '🇲🇽' },
+  { en: 'Cuba', vi: 'Cuba', flag: '🇨🇺' },
+
+  // South America
+  { en: 'Brazil', vi: 'Brazil', flag: '🇧🇷' },
+  { en: 'Argentina', vi: 'Argentina', flag: '🇦🇷' },
+  { en: 'Chile', vi: 'Chile', flag: '🇨🇱' },
+  { en: 'Peru', vi: 'Peru', flag: '🇵🇪' },
+  { en: 'Colombia', vi: 'Colombia', flag: '🇨🇴' },
+
+  // Africa
+  { en: 'Egypt', vi: 'Ai Cập', flag: '🇪🇬' },
+  { en: 'South Africa', vi: 'Nam Phi', flag: '🇿🇦' },
+  { en: 'Kenya', vi: 'Kenya', flag: '🇰🇪' },
+  { en: 'Nigeria', vi: 'Nigeria', flag: '🇳🇬' },
+  { en: 'Morocco', vi: 'Ma Rốc', flag: '🇲🇦' },
+
+  // Oceania
+  { en: 'Australia', vi: 'Úc', flag: '🇦🇺' },
+  { en: 'New Zealand', vi: 'New Zealand', flag: '🇳🇿' },
+  { en: 'Fiji', vi: 'Fiji', flag: '🇫🇯' },
+
+  // Special regions commonly recognized
+  { en: 'Taiwan', vi: 'Đài Loan', flag: '🇹🇼' },
+  { en: 'Hong Kong', vi: 'Hồng Kông', flag: '🇭🇰' },
+];
+
+/** Kid-friendly true/false facts for thumb-up / thumb-down quizzes. */
+export interface ThumbFact {
+  text: string;
+  answer: boolean;
+}
+
+export const THUMB_FACTS: ThumbFact[] = [
+  // Nature
+  { text: 'The sun is hot.', answer: true },
+  { text: 'The moon comes out at night.', answer: true },
+  { text: 'Stars shine at night.', answer: true },
+  { text: 'Rain comes from clouds.', answer: true },
+  { text: 'Snow is hot.', answer: false },
+  { text: 'Fire is cold.', answer: false },
+  { text: 'Ice is cold.', answer: true },
+  { text: 'Grass is usually green.', answer: true },
+  { text: 'The sky is green on a sunny day.', answer: false },
+  { text: 'Trees grow from seeds.', answer: true },
+
+  // Animals
+  { text: 'Fish live in water.', answer: true },
+  { text: 'Birds can fly.', answer: true },
+  { text: 'Penguins can fly.', answer: false },
+  { text: 'Cats say meow.', answer: true },
+  { text: 'Cats say woof.', answer: false },
+  { text: 'Dogs bark.', answer: true },
+  { text: 'Cows say moo.', answer: true },
+  { text: 'Ducks say quack.', answer: true },
+  { text: 'Elephants are bigger than cats.', answer: true },
+  { text: 'Ants are bigger than elephants.', answer: false },
+  { text: 'Giraffes have long necks.', answer: true },
+  { text: 'Snakes have legs.', answer: false },
+  { text: 'Frogs can jump.', answer: true },
+  { text: 'Sharks live in trees.', answer: false },
+  { text: 'Whales live in the ocean.', answer: true },
+  { text: 'Bees make honey.', answer: true },
+  { text: 'Spiders have eight legs.', answer: true },
+  { text: 'Birds have feathers.', answer: true },
+  { text: 'Dogs can swim sometimes.', answer: true },
+  { text: 'Rabbits can hop.', answer: true },
+
+  // Fruits & Food
+  { text: 'Apples are fruits.', answer: true },
+  { text: 'Bananas are yellow.', answer: true },
+  { text: 'Carrots are vegetables.', answer: true },
+  { text: 'Pizza grows on trees.', answer: false },
+  { text: 'Milk comes from cows.', answer: true },
+  { text: 'Chocolate grows on apple trees.', answer: false },
+  { text: 'Water helps us stay healthy.', answer: true },
+  { text: 'We drink rocks.', answer: false },
+  { text: 'Oranges are blue.', answer: false },
+  { text: 'Strawberries are usually red.', answer: true },
+
+  // Body
+  { text: 'We have two eyes.', answer: true },
+  { text: 'We have one nose.', answer: true },
+  { text: 'We have ten fingers.', answer: true },
+  { text: 'People have three ears.', answer: false },
+  { text: 'We walk with our feet.', answer: true },
+  { text: 'We see with our eyes.', answer: true },
+  { text: 'We hear with our ears.', answer: true },
+  { text: 'We smell with our nose.', answer: true },
+  { text: 'We eat with our mouth.', answer: true },
+  { text: 'People have six hands.', answer: false },
+
+  // Colors
+  { text: 'The sun is yellow.', answer: true },
+  { text: 'Grass is blue.', answer: false },
+  { text: 'Snow is white.', answer: true },
+  { text: 'Coal is black.', answer: true },
+  { text: 'Strawberries are green.', answer: false },
+  { text: 'The sky is blue on a sunny day.', answer: true },
+
+  // Shapes
+  { text: 'A triangle has three sides.', answer: true },
+  { text: 'A square has four sides.', answer: true },
+  { text: 'A circle has corners.', answer: false },
+  { text: 'A rectangle has four sides.', answer: true },
+  { text: 'A star is a shape.', answer: true },
+
+  // Numbers & Math
+  { text: '1 + 1 equals 2.', answer: true },
+  { text: '2 + 3 equals 6.', answer: false },
+  { text: '5 is bigger than 3.', answer: true },
+  { text: '10 comes after 9.', answer: true },
+  { text: '7 comes before 5.', answer: false },
+  { text: 'A week has seven days.', answer: true },
+
+  // Time
+  { text: 'Winter is usually cold.', answer: true },
+  { text: 'Summer is usually hot.', answer: true },
+  { text: 'Morning comes before night.', answer: true },
+  { text: 'Night comes before afternoon every day.', answer: false },
+
+  // Transport
+  { text: 'Cars can drive on roads.', answer: true },
+  { text: 'Airplanes can fly.', answer: true },
+  { text: 'Boats travel on water.', answer: true },
+  { text: 'Trains fly in the sky.', answer: false },
+  { text: 'Bicycles have two wheels.', answer: true },
+
+  // Home & School
+  { text: 'We sleep in a bed.', answer: true },
+  { text: 'Books can be read.', answer: true },
+  { text: 'Pencils are used for writing.', answer: true },
+  { text: 'Chairs can fly.', answer: false },
+  { text: 'A backpack carries school supplies.', answer: true },
+
+  // Fun
+  { text: 'The moon is made of cheese.', answer: false },
+  { text: 'Dinosaurs still walk around cities today.', answer: false },
+  { text: 'Plants need water to grow.', answer: true },
+  { text: 'Robots are animals.', answer: false },
+  { text: 'A fish can ride a bicycle.', answer: false },
+  { text: 'An elephant is heavier than a mouse.', answer: true },
+  { text: 'A baby dog is called a puppy.', answer: true },
+  { text: 'A baby cat is called a kitten.', answer: true },
+  { text: 'A rainbow has many colors.', answer: true },
+  { text: 'Clouds are made of candy.', answer: false },
+];

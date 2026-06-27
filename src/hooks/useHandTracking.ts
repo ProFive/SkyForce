@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { HandLandmarker } from '@mediapipe/tasks-vision';
 import * as calibration from '../engine/calibration';
+import { classifyGesture } from '../engine/gestures';
 import type { HandPosition } from '../types';
 
 const WASM_BASE_PATH =
@@ -102,6 +103,7 @@ export const useHandTracking = () => {
         if (result.landmarks && result.landmarks.length > 0) {
           // Index-finger tip is landmark 8.
           const tip = result.landmarks[0][8];
+          const lm = result.landmarks[0];
           // Mirror X so moving your hand right moves the ship right.
           const rawX = 1 - tip.x;
           const rawY = tip.y;
@@ -112,9 +114,11 @@ export const useHandTracking = () => {
             y: mapped.y,
             confidence: 1,
             available: true,
+            gesture: classifyGesture(lm.map((p) => ({ x: p.x, y: p.y, z: p.z }))),
           };
         } else {
           handPositionRef.current.available = false;
+          handPositionRef.current.gesture = 'none';
         }
       }
       rafRef.current = requestAnimationFrame(detectLoop);

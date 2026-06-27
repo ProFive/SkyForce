@@ -9,63 +9,81 @@ import {
   stepPopups,
 } from './fx';
 import { MAX_LEVEL, levelGoal } from './levels';
-import { drawNumberCatch } from './mathRenderer';
+import { drawNumberCatch, type MathFallItem } from './mathRenderer';
 
 const BASKET_W = 104;
 const BASKET_H = 44;
 const SMOOTH = 0.4;
 
-export interface MathProblem {
-  a: number;
-  b: number;
-  op: '+' | '-';
-  answer: number;
+export type HuntRule = 'even' | 'odd' | 'greater' | 'less';
+
+export interface HuntChallenge {
+  rule: HuntRule;
+  threshold: number;
   prompt: string;
+  speak: string;
 }
 
-export interface MathFallItem {
-  id: number;
-  x: number;
-  y: number;
-  vy: number;
-  r: number;
-  value: number;
-}
-
-/** Build a kid-friendly addition/subtraction problem scaled to the level. */
-export function makeProblem(level: number): MathProblem {
-  const max = level <= 3 ? 9 : level <= 6 ? 15 : 20;
-  const useSub = level >= 5 && Math.random() < 0.45;
-  let a = 1 + ((Math.random() * max) | 0);
-  let b = 1 + ((Math.random() * max) | 0);
-  if (useSub) {
-    if (b > a) [a, b] = [b, a];
-    return { a, b, op: '-', answer: a - b, prompt: `${a} - ${b} = ?` };
+export function makeChallenge(level: number): HuntChallenge {
+  if (level <= 4) {
+    const even = Math.random() < 0.5;
+    return {
+      rule: even ? 'even' : 'odd',
+      threshold: 0,
+      prompt: even ? 'Catch EVEN numbers' : 'Catch ODD numbers',
+      speak: even ? 'Catch the even numbers' : 'Catch the odd numbers',
+    };
   }
-  return { a, b, op: '+', answer: a + b, prompt: `${a} + ${b} = ?` };
+  const threshold = 3 + ((Math.random() * 6) | 0);
+  const greater = level <= 7 ? true : Math.random() < 0.5;
+  return greater
+    ? {
+        rule: 'greater',
+        threshold,
+        prompt: `Catch numbers > ${threshold}`,
+        speak: `Catch numbers greater than ${threshold}`,
+      }
+    : {
+        rule: 'less',
+        threshold,
+        prompt: `Catch numbers < ${threshold}`,
+        speak: `Catch numbers less than ${threshold}`,
+      };
 }
 
-export function speakProblem(p: MathProblem): string {
-  const op = p.op === '+' ? 'plus' : 'minus';
-  return `${p.a} ${op} ${p.b} equals what?`;
+export function matchesRule(value: number, c: HuntChallenge): boolean {
+  switch (c.rule) {
+    case 'even':
+      return value % 2 === 0;
+    case 'odd':
+      return value % 2 === 1;
+    case 'greater':
+      return value > c.threshold;
+    case 'less':
+      return value < c.threshold;
+  }
 }
 
-function distractors(answer: number, count = 5): number[] {
-  const vals = new Set<number>([answer]);
+function randomValue(): number {
+  return (Math.random() * 21) | 0;
+}
+
+function valuePool(challenge: HuntChallenge, count = 6): number[] {
+  const vals = new Set<number>();
   let guard = 0;
-  while (vals.size < count && guard++ < 40) {
-    const d = answer + ((Math.random() * 9) | 0) - 4;
-    if (d >= 0 && d <= 30) vals.add(d);
+  while (vals.size < count && guard++ < 80) {
+    const v = randomValue();
+    if (matchesRule(v, challenge)) vals.add(v);
   }
-  while (vals.size < count) vals.add(answer + vals.size);
+  while (vals.size < count) vals.add(randomValue());
   return [...vals];
 }
 
 /**
- * Falling-number catch game: read the equation, catch the correct answer in
- * the basket. No-fail — wrong catches just nudge. Ten levels, faster falls.
+ * Catch falling numbers that match a rule (even, odd, greater than, less than).
+ * No-fail basket game for ages 6–10.
  */
-export class MathWorld implements GameInstance {
+export class NumberHuntWorld implements GameInstance {
   width: number;
   height: number;
 
@@ -73,7 +91,7 @@ export class MathWorld implements GameInstance {
   items: MathFallItem[] = [];
   particles: Particle[] = [];
   popups: Popup[] = [];
-  problem: MathProblem = makeProblem(1);
+  challenge: HuntChallenge = makeChallenge(1);
   level = 1;
   correct = 0;
   score = 0;
@@ -110,33 +128,42 @@ export class MathWorld implements GameInstance {
     this.shake = 0;
     this.gameOver = false;
     this.spawnTimer = 18;
-    this.pickProblem();
+    this.pickChallenge();
   }
 
-  private pickProblem(announce = '') {
-    this.problem = makeProblem(this.level);
-    this.pool = distractors(this.problem.answer);
-    this.onSpeak?.(`${announce}${speakProblem(this.problem)}`);
+  private pickChallenge(announce = '') {
+    this.challenge = makeChallenge(this.level);
+    this.pool = valuePool(this.challenge);
+    this.onSpeak?.(`${announce}${this.challenge.speak}`);
   }
 
   private spawnEvery() {
-    return Math.max(22, 48 - this.level * 4);
+    return Math.max(20, 46 - this.level * 4);
   }
 
   private fallSpeed() {
-    return 1.8 + this.level * 0.28 + Math.random() * 0.5;
+    return 2 + this.level * 0.25 + Math.random() * 0.5;
   }
 
-  private answerBias() {
-    return Math.max(0.3, 0.55 - this.level * 0.04);
+  private targetBias() {
+    return Math.max(0.28, 0.52 - this.level * 0.04);
   }
 
   private spawn() {
     const r = 24;
-    const value =
-      Math.random() < this.answerBias()
-        ? this.problem.answer
-        : this.pool[(Math.random() * this.pool.length) | 0];
+    const matching = Math.random() < this.targetBias();
+    let value = this.pool[(Math.random() * this.pool.length) | 0];
+    if (matching) {
+      let guard = 0;
+      while (!matchesRule(value, this.challenge) && guard++ < 20) {
+        value = randomValue();
+      }
+    } else {
+      let guard = 0;
+      while (matchesRule(value, this.challenge) && guard++ < 20) {
+        value = randomValue();
+      }
+    }
     this.items.push({
       id: this.nextId++,
       x: r + 6 + Math.random() * (this.width - 2 * (r + 6)),
@@ -172,7 +199,7 @@ export class MathWorld implements GameInstance {
       const inY = it.y + it.r >= rimY && it.y <= this.basket.y + this.basket.h / 2;
       if (!inX || !inY) continue;
       caught.add(it.id);
-      if (it.value === this.problem.answer) {
+      if (matchesRule(it.value, this.challenge)) {
         this.score += 10;
         this.correct += 1;
         burst(this.particles, it.x, it.y, '#ffe45e', 16);
@@ -187,11 +214,11 @@ export class MathWorld implements GameInstance {
             this.level += 1;
             this.correct = 0;
             this.onSfx?.('level');
-            this.pickProblem(`Level ${this.level}! `);
+            this.pickChallenge(`Level ${this.level}! `);
           }
         } else {
           this.onSfx?.('powerup');
-          this.pickProblem();
+          this.pickChallenge();
         }
         break;
       } else {
@@ -212,7 +239,7 @@ export class MathWorld implements GameInstance {
       width: this.width,
       height: this.height,
       shake: this.shake,
-      prompt: this.problem.prompt,
+      prompt: this.challenge.prompt,
       items: this.items,
       basket: this.basket,
       particles: this.particles,
@@ -224,7 +251,7 @@ export class MathWorld implements GameInstance {
     return {
       score: this.score,
       level: this.level,
-      prompt: this.problem.prompt,
+      prompt: this.challenge.prompt,
       badges: [
         {
           key: 'progress',
