@@ -17,7 +17,7 @@ const BASE_R = 56; // generous hitbox for little fingers at level 1
 const MIN_R = 36; // never shrink below this
 const TOUCH_COOLDOWN = 12; // frames before a fresh touch can register
 
-export type TouchMode = 'emoji' | 'color';
+export type TouchMode = 'emoji' | 'color' | 'word';
 
 export interface Choice {
   id: number;

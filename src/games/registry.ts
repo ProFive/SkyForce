@@ -10,6 +10,8 @@ import { vocabcatch } from './vocabcatch';
 import { touchanimal } from './touchanimal';
 import { learncolors } from './learncolors';
 import { countgame } from './countgame';
+import { spellword } from './spellword';
+import { wordmatch } from './wordmatch';
 
 /** Every game in the arcade. Add a module here to surface it on the menu. */
 export const GAMES: GameModule[] = [
@@ -24,6 +26,8 @@ export const GAMES: GameModule[] = [
   touchanimal,
   learncolors,
   countgame,
+  spellword,
+  wordmatch,
 ];
 
 export const getGame = (id: string | null): GameModule | undefined =>

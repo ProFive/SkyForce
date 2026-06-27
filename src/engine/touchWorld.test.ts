@@ -76,4 +76,12 @@ describe('TouchWorld', () => {
     w.update(handAt(100, 100));
     expect(w.score).toBe(10);
   });
+
+  it('works in word mode (picture → word) and shows the picture as the prompt', () => {
+    const w = new TouchWorld(W, H, ANIMALS, 'word', 'Find the word');
+    expect(w.hud().prompt).toBe(w.target.emoji ?? w.target.en);
+    setRound(w, ANIMALS[0], ANIMALS[1]);
+    w.update(handAt(100, 100));
+    expect(w.score).toBe(10);
+  });
 });
