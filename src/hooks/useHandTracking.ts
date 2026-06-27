@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { HandLandmarker } from '@mediapipe/tasks-vision';
 import * as calibration from '../engine/calibration';
-import { classifyGesture } from '../engine/gestures';
+import { classifyGesture, isPinching } from '../engine/gestures';
 import type { HandPosition } from '../types';
 
 const WASM_BASE_PATH =
@@ -42,7 +42,7 @@ export const useHandTracking = () => {
         const vision = await FilesetResolver.forVisionTasks(WASM_BASE_PATH);
         const landmarker = await HandLandmarker.createFromOptions(vision, {
           baseOptions: { modelAssetPath: MODEL_PATH, delegate: 'GPU' },
-          numHands: 1,
+          numHands: 2,
           runningMode: 'VIDEO',
         });
         if (cancelled) {
@@ -77,6 +77,25 @@ export const useHandTracking = () => {
       }
     };
 
+    const mapHand = (
+      lm: { x: number; y: number; z: number }[]
+    ): HandPosition => {
+      const tip = lm[8];
+      const rawX = 1 - tip.x;
+      const rawY = tip.y;
+      calibration.observe(rawX, rawY);
+      const mapped = calibration.apply(rawX, rawY);
+      const landmarks = lm.map((p) => ({ x: p.x, y: p.y, z: p.z }));
+      return {
+        x: mapped.x,
+        y: mapped.y,
+        confidence: 1,
+        available: true,
+        gesture: classifyGesture(landmarks),
+        pinching: isPinching(landmarks),
+      };
+    };
+
     const detectLoop = () => {
       // Dev-only manual override for deterministic testing of finger-driven UI.
       if (import.meta.env.DEV) {
@@ -101,24 +120,18 @@ export const useHandTracking = () => {
       if (video && landmarker && video.readyState >= 2) {
         const result = landmarker.detectForVideo(video, performance.now());
         if (result.landmarks && result.landmarks.length > 0) {
-          // Index-finger tip is landmark 8.
-          const tip = result.landmarks[0][8];
-          const lm = result.landmarks[0];
-          // Mirror X so moving your hand right moves the ship right.
-          const rawX = 1 - tip.x;
-          const rawY = tip.y;
-          calibration.observe(rawX, rawY); // grows the box while calibrating
-          const mapped = calibration.apply(rawX, rawY);
-          handPositionRef.current = {
-            x: mapped.x,
-            y: mapped.y,
-            confidence: 1,
-            available: true,
-            gesture: classifyGesture(lm.map((p) => ({ x: p.x, y: p.y, z: p.z }))),
-          };
+          const primary = mapHand(result.landmarks[0]);
+          handPositionRef.current = primary;
+          if (result.landmarks.length > 1) {
+            handPositionRef.current.other = mapHand(result.landmarks[1]);
+          } else {
+            delete handPositionRef.current.other;
+          }
         } else {
           handPositionRef.current.available = false;
           handPositionRef.current.gesture = 'none';
+          handPositionRef.current.pinching = false;
+          delete handPositionRef.current.other;
         }
       }
       rafRef.current = requestAnimationFrame(detectLoop);
