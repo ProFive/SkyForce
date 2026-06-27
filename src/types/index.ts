@@ -107,6 +107,8 @@ export interface GameInstance {
   onSfx?: (name: SfxName) => void;
   /** Speak a short phrase aloud (English TTS) — used by learning games. */
   onSpeak?: (text: string) => void;
+  /** Play a musical note (Hz) — used by the piano game. */
+  onNote?: (frequencyHz: number) => void;
   reset(): void;
   update(hand: HandPosition): void;
   render(ctx: CanvasRenderingContext2D): void;
