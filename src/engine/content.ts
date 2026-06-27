@@ -223,3 +223,261 @@ export const COLORS: Item[] = [
   { en: 'aqua', vi: 'xanh nước biển', hex: '#00FFFF' },
 ];
 export const pick = <T>(arr: T[]): T => arr[(Math.random() * arr.length) | 0];
+
+// ---------------------------------------------------------------------------
+// Shapes — drawn procedurally (no emoji) so "find the circle" reads cleanly.
+// ---------------------------------------------------------------------------
+
+export type ShapeKind =
+  | 'circle'
+  | 'oval'
+  | 'square'
+  | 'rectangle'
+  | 'triangle'
+  | 'right_triangle'
+  | 'diamond'
+  | 'rhombus'
+  | 'parallelogram'
+  | 'trapezoid'
+  | 'pentagon'
+  | 'hexagon'
+  | 'heptagon'
+  | 'octagon'
+  | 'nonagon'
+  | 'decagon'
+  | 'star'
+  | 'heart'
+  | 'crescent'
+  | 'cross'
+  | 'plus'
+  | 'arrow'
+  | 'ellipse'
+  | 'semicircle'
+  | 'kite'
+  | 'shield'
+  | 'cloud'
+  | 'drop'
+  | 'moon'
+  | 'sun';
+
+export interface Shape {
+  en: string;
+  vi: string;
+  kind: ShapeKind;
+  hex: string;
+}
+
+export const SHAPES: Item[] = [
+  { en: 'circle', vi: 'hình tròn', emoji: '⚪' },
+  { en: 'oval', vi: 'hình bầu dục', emoji: '🥚' },
+  { en: 'square', vi: 'hình vuông', emoji: '🟦' },
+  { en: 'rectangle', vi: 'hình chữ nhật', emoji: '▭' },
+  { en: 'triangle', vi: 'hình tam giác', emoji: '🔺' },
+  { en: 'right triangle', vi: 'tam giác vuông', emoji: '📐' },
+  { en: 'diamond', vi: 'hình kim cương', emoji: '💎' },
+  { en: 'rhombus', vi: 'hình thoi', emoji: '🔶' },
+  { en: 'parallelogram', vi: 'hình bình hành', emoji: '▱' },
+  { en: 'trapezoid', vi: 'hình thang', emoji: '⏢' },
+  { en: 'pentagon', vi: 'hình ngũ giác', emoji: '⬟' },
+  { en: 'hexagon', vi: 'hình lục giác', emoji: '⬢' },
+  { en: 'heptagon', vi: 'hình thất giác', emoji: '🟣' },
+  { en: 'octagon', vi: 'hình bát giác', emoji: '🛑' },
+  { en: 'nonagon', vi: 'hình cửu giác', emoji: '🟣' },
+  { en: 'decagon', vi: 'hình thập giác', emoji: '🔟' },
+  { en: 'star', vi: 'ngôi sao', emoji: '⭐' },
+  { en: 'heart', vi: 'trái tim', emoji: '❤️' },
+  { en: 'crescent', vi: 'trăng khuyết', emoji: '🌙' },
+  { en: 'cross', vi: 'hình chữ thập', emoji: '✝️' },
+  { en: 'plus', vi: 'dấu cộng', emoji: '➕' },
+  { en: 'arrow', vi: 'mũi tên', emoji: '➡️' },
+  { en: 'ellipse', vi: 'hình elip', emoji: '🥚' },
+  { en: 'semicircle', vi: 'nửa hình tròn', emoji: '🌗' },
+  { en: 'kite', vi: 'hình cánh diều', emoji: '🪁' },
+  { en: 'shield', vi: 'hình khiên', emoji: '🛡️' },
+  { en: 'cloud', vi: 'hình đám mây', emoji: '☁️' },
+  { en: 'drop', vi: 'giọt nước', emoji: '💧' },
+  { en: 'moon', vi: 'mặt trăng', emoji: '🌙' },
+  { en: 'sun', vi: 'mặt trời', emoji: '☀️' },
+];
+// ---------------------------------------------------------------------------
+// Animal sounds — English onomatopoeia for the "who am I?" listening game.
+// Keyed by Item.en so we can reuse the ANIMALS pack and its emoji.
+// ---------------------------------------------------------------------------
+
+export const ANIMAL_SOUNDS: Record<string, string> = {
+  // Pets
+  cat: 'meow',
+  dog: 'woof woof',
+  puppy: 'yip yip',
+  kitten: 'meow',
+  rabbit: 'squeak',
+  hamster: 'squeak',
+  guinea_pig: 'squeak',
+  mouse: 'squeak',
+  rat: 'squeak',
+
+  // Farm animals
+  cow: 'moo',
+  buffalo: 'moo',
+  pig: 'oink oink',
+  sheep: 'baa',
+  lamb: 'baa',
+  goat: 'maa',
+  horse: 'neigh',
+  donkey: 'hee-haw',
+  chicken: 'cluck cluck',
+  rooster: 'cock-a-doodle-doo',
+  chick: 'cheep cheep',
+  duck: 'quack quack',
+  goose: 'honk honk',
+  turkey: 'gobble gobble',
+
+  // Wild animals
+  lion: 'roar',
+  tiger: 'roar',
+  leopard: 'growl',
+  cheetah: 'growl',
+  bear: 'growl',
+  panda: 'snuffle',
+  koala: 'grunt',
+  wolf: 'howl',
+  fox: 'yip yip',
+  deer: 'bleat',
+  moose: 'grunt',
+  elephant: 'trumpet',
+  rhinoceros: 'snort',
+  hippopotamus: 'grunt',
+  camel: 'grunt',
+  kangaroo: 'chortle',
+  monkey: 'ooh ooh ah ah',
+  gorilla: 'grunt',
+  orangutan: 'hoo hoo',
+  sloth: 'chirp',
+  otter: 'chirp',
+  beaver: 'growl',
+
+  // Birds
+  bird: 'tweet tweet',
+  parrot: 'squawk',
+  eagle: 'screech',
+  owl: 'hoot hoot',
+  penguin: 'honk',
+  flamingo: 'honk',
+  peacock: 'scream',
+  swan: 'honk',
+  dove: 'coo coo',
+
+  // Reptiles & amphibians
+  frog: 'ribbit',
+  toad: 'croak',
+  snake: 'hiss',
+  turtle: 'hiss',
+  lizard: 'hiss',
+  crocodile: 'growl',
+  alligator: 'growl',
+
+  // Sea animals
+  fish: 'blub blub',
+  tropical_fish: 'blub blub',
+  whale: 'whale song',
+  dolphin: 'click click',
+  seal: 'arf arf',
+  crab: 'click click',
+
+  // Insects
+  bee: 'buzz',
+  wasp: 'buzz',
+  butterfly: 'flutter',
+  mosquito: 'buzz',
+  fly: 'buzz',
+  cricket: 'chirp chirp',
+  grasshopper: 'chirp',
+  cicada: 'buzz'
+};
+// ---------------------------------------------------------------------------
+// Quiz bank — kid-friendly general-knowledge questions (science, body, nature).
+// Each question carries its own answer options; `answer` indexes the correct one.
+// ---------------------------------------------------------------------------
+
+export interface QuizQ {
+  q: string; // spoken + shown question
+  vi?: string; // Vietnamese gloss (future bilingual UI)
+  options: string[];
+  answer: number; // index into options
+}
+
+export const MORE_QUIZZES: QuizQ[] = [
+  // Colors
+  { q: 'What color is a banana?', vi: 'Chuối màu gì?', options: ['yellow', 'blue', 'black'], answer: 0 },
+  { q: 'What color is an apple?', vi: 'Táo thường màu gì?', options: ['red', 'purple', 'gray'], answer: 0 },
+  { q: 'What color is snow?', vi: 'Tuyết màu gì?', options: ['white', 'green', 'orange'], answer: 0 },
+  { q: 'What color is coal?', vi: 'Than đá màu gì?', options: ['black', 'pink', 'yellow'], answer: 0 },
+
+  // Animals
+  { q: 'Which animal barks?', vi: 'Con nào sủa?', options: ['dog', 'cat', 'fish'], answer: 0 },
+  { q: 'Which animal meows?', vi: 'Con nào kêu meo meo?', options: ['cat', 'cow', 'duck'], answer: 0 },
+  { q: 'Which animal has a long trunk?', vi: 'Con nào có vòi dài?', options: ['elephant', 'lion', 'horse'], answer: 0 },
+  { q: 'Which animal has a very long neck?', vi: 'Con nào có cổ rất dài?', options: ['giraffe', 'dog', 'pig'], answer: 0 },
+  { q: 'Which animal lives in the ocean?', vi: 'Con nào sống ở đại dương?', options: ['whale', 'rabbit', 'cow'], answer: 0 },
+  { q: 'Which animal hops?', vi: 'Con nào nhảy bằng hai chân sau?', options: ['kangaroo', 'fish', 'duck'], answer: 0 },
+  { q: 'Which animal gives us eggs?', vi: 'Con nào đẻ trứng?', options: ['chicken', 'cow', 'dog'], answer: 0 },
+  { q: 'Which animal gives us milk?', vi: 'Con nào cho sữa?', options: ['cow', 'lion', 'duck'], answer: 0 },
+
+  // Fruits
+  { q: 'Which fruit is yellow?', vi: 'Trái nào màu vàng?', options: ['banana', 'apple', 'grape'], answer: 0 },
+  { q: 'Which fruit is red?', vi: 'Trái nào màu đỏ?', options: ['strawberry', 'coconut', 'pear'], answer: 0 },
+  { q: 'Which fruit has lots of tiny seeds outside?', vi: 'Trái nào có nhiều hạt nhỏ bên ngoài?', options: ['strawberry', 'banana', 'orange'], answer: 0 },
+  { q: 'Which fruit is very big?', vi: 'Trái nào rất lớn?', options: ['watermelon', 'grape', 'cherry'], answer: 0 },
+
+  // Shapes
+  { q: 'How many sides does a triangle have?', vi: 'Tam giác có mấy cạnh?', options: ['3', '4', '5'], answer: 0 },
+  { q: 'How many sides does a square have?', vi: 'Hình vuông có mấy cạnh?', options: ['4', '3', '5'], answer: 0 },
+  { q: 'Which shape is round?', vi: 'Hình nào tròn?', options: ['circle', 'square', 'triangle'], answer: 0 },
+  { q: 'Which shape has five sides?', vi: 'Hình nào có 5 cạnh?', options: ['pentagon', 'circle', 'triangle'], answer: 0 },
+
+  // Numbers
+  { q: 'What comes after 5?', vi: 'Sau số 5 là số nào?', options: ['6', '7', '4'], answer: 0 },
+  { q: 'What comes before 10?', vi: 'Trước số 10 là số nào?', options: ['9', '8', '11'], answer: 0 },
+  { q: 'How many wheels does a bicycle have?', vi: 'Xe đạp có mấy bánh?', options: ['2', '3', '4'], answer: 0 },
+  { q: 'How many eyes do people usually have?', vi: 'Con người thường có mấy mắt?', options: ['2', '1', '3'], answer: 0 },
+
+  // Body
+  { q: 'What do we smell with?', vi: 'Ta ngửi bằng gì?', options: ['nose', 'mouth', 'ears'], answer: 0 },
+  { q: 'What do we eat with?', vi: 'Ta ăn bằng gì?', options: ['mouth', 'eyes', 'feet'], answer: 0 },
+  { q: 'What do we walk with?', vi: 'Ta đi bằng gì?', options: ['feet', 'hands', 'ears'], answer: 0 },
+  { q: 'How many ears do people have?', vi: 'Con người có mấy tai?', options: ['2', '1', '3'], answer: 0 },
+
+  // Nature
+  { q: 'Where does the sun rise?', vi: 'Mặt trời mọc ở đâu?', options: ['east', 'west', 'north'], answer: 0 },
+  { q: 'What falls from the clouds?', vi: 'Cái gì rơi từ mây xuống?', options: ['rain', 'sand', 'rocks'], answer: 0 },
+  { q: 'Which season is the hottest?', vi: 'Mùa nào nóng nhất?', options: ['summer', 'winter', 'autumn'], answer: 0 },
+  { q: 'What shines at night?', vi: 'Cái gì tỏa sáng vào ban đêm?', options: ['moon', 'grass', 'tree'], answer: 0 },
+
+  // Food
+  { q: 'Which one is a vegetable?', vi: 'Đâu là rau củ?', options: ['carrot', 'apple', 'banana'], answer: 0 },
+  { q: 'Which one is sweet?', vi: 'Cái nào ngọt?', options: ['cake', 'salt', 'pepper'], answer: 0 },
+  { q: 'What do we drink when we are thirsty?', vi: 'Khát thì uống gì?', options: ['water', 'sand', 'paper'], answer: 0 },
+
+  // Transport
+  { q: 'Which vehicle flies?', vi: 'Xe nào bay được?', options: ['airplane', 'bus', 'train'], answer: 0 },
+  { q: 'Which vehicle runs on rails?', vi: 'Phương tiện nào chạy trên đường ray?', options: ['train', 'car', 'bike'], answer: 0 },
+  { q: 'Which vehicle sails on water?', vi: 'Phương tiện nào đi trên nước?', options: ['boat', 'bus', 'truck'], answer: 0 },
+
+  // Math
+  { q: 'What is 1 + 1?', vi: '1 + 1 bằng bao nhiêu?', options: ['2', '3', '1'], answer: 0 },
+  { q: 'What is 2 + 3?', vi: '2 + 3 bằng bao nhiêu?', options: ['5', '4', '6'], answer: 0 },
+  { q: 'What is 5 - 2?', vi: '5 - 2 bằng bao nhiêu?', options: ['3', '2', '4'], answer: 0 },
+  { q: 'What is 3 × 2?', vi: '3 × 2 bằng bao nhiêu?', options: ['6', '5', '8'], answer: 0 },
+
+  // Vocabulary
+  { q: 'Which word is a color?', vi: 'Từ nào là màu sắc?', options: ['blue', 'apple', 'dog'], answer: 0 },
+  { q: 'Which word is an animal?', vi: 'Từ nào là con vật?', options: ['lion', 'banana', 'chair'], answer: 0 },
+  { q: 'Which word is a fruit?', vi: 'Từ nào là trái cây?', options: ['orange', 'table', 'shoe'], answer: 0 },
+  { q: 'Which word is a shape?', vi: 'Từ nào là hình dạng?', options: ['circle', 'dog', 'tree'], answer: 0 },
+
+  // Daily life
+  { q: 'Where do you sleep?', vi: 'Con ngủ ở đâu?', options: ['bed', 'sink', 'road'], answer: 0 },
+  { q: 'Where do fish swim?', vi: 'Cá bơi ở đâu?', options: ['water', 'sand', 'sky'], answer: 0 },
+  { q: 'What do you wear on your feet?', vi: 'Con mang gì ở chân?', options: ['shoes', 'hat', 'gloves'], answer: 0 },
+  { q: 'What do you wear on your head?', vi: 'Con đội gì trên đầu?', options: ['hat', 'sock', 'belt'], answer: 0 },
+];

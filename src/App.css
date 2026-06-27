@@ -133,6 +133,10 @@
   position: relative;
   width: 100%;
   height: 100%;
+  /* The bitmap has a fixed 480x720 (portrait) resolution. `contain` scales it
+     uniformly and centers it (letterbox) so circles stay round and text never
+     stretches, no matter the board's aspect ratio (incl. full-screen). */
+  object-fit: contain;
   z-index: 2;
 }
 
