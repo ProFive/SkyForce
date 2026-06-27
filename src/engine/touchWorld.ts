@@ -2,6 +2,7 @@ import type { GameInstance, HandPosition, HudState, SfxName } from '../types';
 import {
   type Particle,
   type Popup,
+  clamp,
   dist,
   burst,
   popup,
@@ -9,11 +10,11 @@ import {
   stepPopups,
 } from './fx';
 import { type Item, pick } from './content';
+import { MAX_LEVEL, levelGoal } from './levels';
 import { drawTouch } from './touchRenderer';
 
-const GOAL = 6; // correct touches to win (no-fail learning game)
-const CHOICES = 3; // items shown each round
-const R = 56; // generous hitbox for little fingers
+const BASE_R = 56; // generous hitbox for little fingers at level 1
+const MIN_R = 36; // never shrink below this
 const TOUCH_COOLDOWN = 12; // frames before a fresh touch can register
 
 export type TouchMode = 'emoji' | 'color';
@@ -35,7 +36,8 @@ export class TouchWorld implements GameInstance {
   popups: Popup[] = [];
   finger = { x: 0, y: 0, active: false };
   target: Item;
-  correct = 0;
+  level = 1;
+  correct = 0; // correct touches within the current level
   score = 0;
   shake = 0;
   gameOver = false;
@@ -71,6 +73,7 @@ export class TouchWorld implements GameInstance {
     this.particles = [];
     this.popups = [];
     this.finger = { x: this.width / 2, y: this.height / 2, active: false };
+    this.level = 1;
     this.correct = 0;
     this.score = 0;
     this.shake = 0;
@@ -79,28 +82,39 @@ export class TouchWorld implements GameInstance {
     this.pickRound();
   }
 
-  private pickRound() {
+  // More choices and smaller targets as the level climbs.
+  private choiceCount() {
+    return clamp(2 + this.level, 3, this.pack.length);
+  }
+  private choiceRadius() {
+    return clamp(BASE_R - (this.level - 1) * 4, MIN_R, BASE_R);
+  }
+
+  private pickRound(announce = '') {
+    const count = this.choiceCount();
+    const r = this.choiceRadius();
+
     // Choose distinct items; the first is the target.
     const chosen: Item[] = [];
-    while (chosen.length < Math.min(CHOICES, this.pack.length)) {
+    while (chosen.length < count) {
       const it = pick(this.pack);
       if (!chosen.some((c) => c.en === it.en)) chosen.push(it);
     }
     this.target = chosen[0];
 
     // Place at spaced, non-overlapping spots within a comfortable band.
-    const marginX = R + 24;
-    const top = this.height * 0.22;
-    const bottom = this.height * 0.78;
+    const marginX = r + 24;
+    const top = this.height * 0.2;
+    const bottom = this.height * 0.8;
     const spots: { x: number; y: number }[] = [];
     for (let n = 0; n < chosen.length; n++) {
       let x = 0;
       let y = 0;
       let ok = false;
-      for (let tries = 0; tries < 40 && !ok; tries++) {
+      for (let tries = 0; tries < 60 && !ok; tries++) {
         x = marginX + Math.random() * (this.width - 2 * marginX);
         y = top + Math.random() * (bottom - top);
-        ok = spots.every((s) => dist(s.x, s.y, x, y) > R * 2.4);
+        ok = spots.every((s) => dist(s.x, s.y, x, y) > r * 2.2);
       }
       spots.push({ x, y });
     }
@@ -111,11 +125,11 @@ export class TouchWorld implements GameInstance {
       id: this.nextId++,
       x: spots[i].x,
       y: spots[i].y,
-      r: R,
+      r,
       item: chosen[idx],
     }));
 
-    this.onSpeak?.(`${this.speakVerb} ${this.target.en}`);
+    this.onSpeak?.(`${announce}${this.speakVerb} ${this.target.en}`);
   }
 
   update(hand: HandPosition) {
@@ -138,11 +152,18 @@ export class TouchWorld implements GameInstance {
           this.correct += 1;
           burst(this.particles, c.x, c.y, '#ffe45e', 16);
           popup(this.popups, c.x, c.y, '✓', '#7dff9b');
-          if (this.correct >= GOAL) {
-            this.gameOver = true;
-            this.onSfx?.('level');
-            this.onSpeak?.('Well done!');
-            this.onGameOver?.();
+          if (this.correct >= levelGoal(this.level)) {
+            if (this.level >= MAX_LEVEL) {
+              this.gameOver = true;
+              this.onSfx?.('level');
+              this.onSpeak?.('You did it! Well done!');
+              this.onGameOver?.();
+            } else {
+              this.level += 1;
+              this.correct = 0;
+              this.onSfx?.('level');
+              this.pickRound(`Level ${this.level}! `);
+            }
           } else {
             this.onSfx?.('powerup');
             this.pickRound();
@@ -167,9 +188,14 @@ export class TouchWorld implements GameInstance {
   hud(): HudState {
     return {
       score: this.score,
+      level: this.level,
       prompt: this.target.emoji ?? this.target.en,
       badges: [
-        { key: 'progress', label: `${this.correct}/${GOAL}`, color: '#ffd25e' },
+        {
+          key: 'progress',
+          label: `${this.correct}/${levelGoal(this.level)}`,
+          color: '#ffd25e',
+        },
       ],
     };
   }

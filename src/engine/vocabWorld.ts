@@ -9,12 +9,12 @@ import {
   stepPopups,
 } from './fx';
 import { type Item, FRUITS, pick } from './content';
+import { MAX_LEVEL, levelGoal } from './levels';
 import { drawVocab } from './vocabRenderer';
 
 const BASKET_W = 104;
 const BASKET_H = 44;
 const SMOOTH = 0.4;
-const GOAL = 8; // correct catches to win (no-fail learning game)
 
 export interface FallItem {
   id: number;
@@ -35,7 +35,8 @@ export class VocabWorld implements GameInstance {
   popups: Popup[] = [];
   pack: Item[] = FRUITS;
   target: Item = FRUITS[0];
-  correct = 0;
+  level = 1;
+  correct = 0; // correct catches within the current level
   score = 0;
   shake = 0;
   gameOver = false;
@@ -65,30 +66,42 @@ export class VocabWorld implements GameInstance {
     this.items = [];
     this.particles = [];
     this.popups = [];
+    this.level = 1;
     this.correct = 0;
     this.score = 0;
     this.shake = 0;
     this.gameOver = false;
     this.spawnTimer = 20;
-    this.pickTarget(); // also speaks the first word (once onSpeak is wired)
+    this.pickTarget();
   }
 
-  private pickTarget() {
+  private pickTarget(announce = '') {
     let next = this.target;
     while (next === this.target) next = pick(this.pack);
     this.target = next;
-    this.onSpeak?.(`Catch the ${next.en}`);
+    this.onSpeak?.(`${announce}Catch the ${next.en}`);
+  }
+
+  // Difficulty knobs scale with the current level.
+  private spawnEvery() {
+    return Math.max(24, 50 - this.level * 5);
+  }
+  private fallSpeed() {
+    return 1.5 + this.level * 0.3 + Math.random() * 0.6;
+  }
+  private targetBias() {
+    // Higher levels show the right answer less often (more distractors).
+    return Math.max(0.28, 0.52 - this.level * 0.05);
   }
 
   private spawn() {
     const r = 26;
-    // Bias toward the target so it appears often enough for young players.
-    const item = Math.random() < 0.42 ? this.target : pick(this.pack);
+    const item = Math.random() < this.targetBias() ? this.target : pick(this.pack);
     this.items.push({
       id: this.nextId++,
       x: r + 6 + Math.random() * (this.width - 2 * (r + 6)),
       y: -r,
-      vy: 1.9 + Math.random() * 0.7,
+      vy: this.fallSpeed(),
       r,
       item,
     });
@@ -105,7 +118,7 @@ export class VocabWorld implements GameInstance {
     this.basket.x = clamp(this.basket.x, this.basket.w / 2, this.width - this.basket.w / 2);
     this.basket.y = clamp(this.basket.y, this.height * 0.45, this.height - 60);
 
-    if (++this.spawnTimer >= 46) {
+    if (++this.spawnTimer >= this.spawnEvery()) {
       this.spawnTimer = 0;
       this.spawn();
     }
@@ -124,11 +137,18 @@ export class VocabWorld implements GameInstance {
         this.correct += 1;
         burst(this.particles, it.x, it.y, '#ffe45e', 16);
         popup(this.popups, it.x, it.y, '✓', '#7dff9b');
-        if (this.correct >= GOAL) {
-          this.gameOver = true;
-          this.onSfx?.('level');
-          this.onSpeak?.('Well done!');
-          this.onGameOver?.();
+        if (this.correct >= levelGoal(this.level)) {
+          if (this.level >= MAX_LEVEL) {
+            this.gameOver = true;
+            this.onSfx?.('level');
+            this.onSpeak?.('You did it! Well done!');
+            this.onGameOver?.();
+          } else {
+            this.level += 1;
+            this.correct = 0;
+            this.onSfx?.('level');
+            this.pickTarget(`Level ${this.level}! `);
+          }
         } else {
           this.onSfx?.('powerup');
           this.pickTarget();
@@ -155,9 +175,14 @@ export class VocabWorld implements GameInstance {
   hud(): HudState {
     return {
       score: this.score,
+      level: this.level,
       prompt: this.target.emoji ?? this.target.en,
       badges: [
-        { key: 'progress', label: `${this.correct}/${GOAL}`, color: '#ffd25e' },
+        {
+          key: 'progress',
+          label: `${this.correct}/${levelGoal(this.level)}`,
+          color: '#ffd25e',
+        },
       ],
     };
   }

@@ -10,6 +10,6 @@ export const countgame: GameModule = {
   category: 'learn',
   howTo:
     'Listen for how many stars to catch, then slide the basket to catch them ' +
-    'while we count together. Finish 5 rounds to win!',
+    'while we count together. Count higher and faster each level — clear 10 to win!',
   create: (width, height) => new CountWorld(width, height),
 };

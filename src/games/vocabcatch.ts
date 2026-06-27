@@ -10,6 +10,7 @@ export const vocabcatch: GameModule = {
   category: 'learn',
   howTo:
     'Listen to the word, then slide the basket to catch the matching picture. ' +
-    'Catch 8 to win — no wrong answers hurt you!',
+    'Clear 10 levels to win — each one needs more catches and falls faster. ' +
+    'No wrong answers hurt you!',
   create: (width, height) => new VocabWorld(width, height),
 };
